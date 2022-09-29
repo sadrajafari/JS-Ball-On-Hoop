@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hoop Generator</h1>>
+    
+    <form>
+        <label for="radius">radius:</label><br>
+        <input type="text" id="radius" name="radius" value="100"><br>
+
+        <label for="tube">tube:</label><br>
+        <input type="text" id="tube" name="tube" value="3"><br>
+
+        <label for="radialSegments">radialSegment:</label><br>
+        <input type="text" id="radialSegments" name="radialSegments" value="16"><br>
+
+        <label for="tubularSegments">tubularSegments:</label><br>
+        <input type="text" id="tubularSegments" name="tubularSegments" value="81"><br>
+
+        <label for="arc">arc:</label><br>
+        <input type="text" id="arc" name="arc" value="6.28">
+      </form>
+      
+    <canvas id="c" width = "350" height="350"></canvas>
+    <script  type="importmap">{
+        "imports": {
+            "three": "https://threejs.org/build/three.module.js"
+        }
+    }</script>
+    <button id="generate" type="button">Generate</button>
+    
+    <script type = "module">
+        import{draw} from '/src/index.js'
+        document.getElementById("generate").addEventListener("click", draw)
+    </script>
+    
+</body>
+</html> 
