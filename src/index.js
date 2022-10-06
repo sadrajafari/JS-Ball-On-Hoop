@@ -1,5 +1,8 @@
 
 import * as THREE from 'three';
+// TODO: MAKE RING APPEAR SPINNING IN A DIRECTION WHETHER BY LIGHTING OR WHATEVER
+// TODO: IMPLEMENT THAT RK4 FORTRAN CODE INTO JS
+// TODO: ADD THE CONSTANTS TO THE HTML
 
 export function draw() {
 
@@ -22,16 +25,20 @@ export function draw() {
 
   //const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
   const geometryHoop = new THREE.TorusGeometry(radius,tube,radialSegments,tubularSegments, arc);
-  const materialHoop = new THREE.MeshBasicMaterial({color: 0x44aa88, opacity: 0.5, transparent: true}); 
+  const materialHoop = new THREE.MeshBasicMaterial({color: 0x44aa88}); 
+  const geometryHoop2 = new THREE.TorusGeometry(radius,tube*1.05,radialSegments,tubularSegments, arc/2);
+  const materialHoop2 = new THREE.MeshBasicMaterial({color: 0x0000FF}); 
   const hoop = new THREE.Mesh(geometryHoop, materialHoop);
+  const hoop2 = new THREE.Mesh(geometryHoop2, materialHoop2);
+  hoop2.rotation.z = 6.28/4;
   scene.add(hoop);
+  scene.add(hoop2);
   const geometryCenter = new THREE.SphereGeometry( 2, 32, 16 );
   const materialCenter = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   const center = new THREE.Mesh( geometryCenter, materialCenter );
   scene.add( center );
-
   let angle = 270;
-  const geometryBall = new THREE.SphereGeometry( 5, 32, 16 );
+  const geometryBall = new THREE.SphereGeometry( 5, 5,5 );
   const materialBall = new THREE.MeshBasicMaterial( { color: 0xff0000} );
   const ball = new THREE.Mesh( geometryBall, materialBall );
   scene.add( ball );
@@ -41,9 +48,10 @@ export function draw() {
   renderer.render(scene, camera);
   function render(time){
     hoop.rotation.y += .01;
+    hoop2.rotation.y = hoop.rotation.y;
     angle++;
     let cords = getBallPos(angle, radius);
-    ball.position.set(cords[0]*Math.cos(hoop.rotation.y),cords[1],0)
+    ball.position.set(cords[0]*Math.cos(hoop.rotation.y),cords[1],100)
     renderer.render(scene,camera);
 
     requestAnimationFrame(render);
