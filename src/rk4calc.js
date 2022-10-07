@@ -19,19 +19,20 @@ function main(){
 
     let valid;
     fs.open('output.csv','w',function (err, f) {
-        console.log('Saved!');
+        //console.log('Saved!');
       });
     fs.appendFile('output.csv', 't,theta,v\n',function (err, f) {
-        console.log('Saved!');
+        //console.log('Saved!');
       });
     for (i = 0; i <= 200; i++){
-        fs.appendFile('output.csv', `${t.toFixed(4)},${y[0].toFixed(4)},${y[1].toFixed(4)}\n`,function (err, f) {
-            console.log('Saved!');
+        fs.appendFileSync('output.csv', `${t.toFixed(4)},${y[0].toFixed(4)},${y[1].toFixed(4)}\n`,function (err, f) {
+            //console.log('Saved!');
           });
         valid = true;
         ynew = rk4(y,N,t,h,ynew);
+        
         if (valid){
-            for(j = 0; j<N; j++){
+            for(j = 0; j<=N; j++){
                 y[j] = ynew[j];
             }
             t = t + h;
@@ -67,7 +68,7 @@ function rk4(y,N,x,h,ynew){
     }
     dym = derivs(xh,yt,dym);
     for (index = 0; index <= N; index++){
-        yt[index] = y[index]+hh*dym[index];
+        yt[index] = y[index]+h*dym[index];
         dym[index] = dyt[index]+dym[index];
     }
     dyt = derivs(x+h,yt,dyt);
