@@ -1,6 +1,6 @@
 
 const fs = require('fs');
-let g = 9.8;
+let g = 200;
 let k = 5.0;
 let r = 0.1;
 let omega = 20.0;
@@ -8,10 +8,10 @@ let pi = 3.1415926535;
 
 function main(){
     
-    const N =2;
+    const N = 2;
     let i;
     let j;
-    let h = 0.01;
+    let h = 0.01; //this will be delta T between animation
     let t = 0.0;
     let y = [0.5,0.0];
     let ynew = [];

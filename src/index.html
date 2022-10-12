@@ -23,13 +23,17 @@
         <input type="text" id="tubularSegments" name="tubularSegments" value="81"><br>
 
         <label for="arc">arc:</label><br>
-        <input type="text" id="arc" name="arc" value="6.28">
+        <input type="text" id="arc" name="arc" value="6.28"><br>
+
+        <label for="omega">omega:</label><br>
+        <input type="text" id="omega" name="omega" value="6.28">
       </form>
       
     <canvas id="c" width = "350" height="350"></canvas>
     <script  type="importmap">{
         "imports": {
-            "three": "https://threejs.org/build/three.module.js"
+            "three": "https://threejs.org/build/three.module.js",
+            "fs": ""
         }
     }</script>
     <button id="generate" type="button">Generate</button>
