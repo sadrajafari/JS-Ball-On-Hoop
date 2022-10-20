@@ -1,4 +1,3 @@
-
 import * as THREE from 'three';
 let g = 9.8;
 let k = 5.0;
@@ -13,10 +12,10 @@ function main(dt, velocity, angle, omega, radius){
     let t = 0.0;
     let y = [angle,velocity];
     let ynew = [];
-    ynew = rk4(y,N,t,h,ynew,omega, r);
+    ynew = rk4(y,N,t,h,ynew,omega*3, r);
     y[0] = ynew[0];
     y[1] = ynew[1];
-    //console.log(angle)
+    console.log(y[0])
     return y;
 }
 
@@ -105,7 +104,7 @@ export function draw() {
   const ball = new THREE.Mesh( geometryBall, materialBall );
   scene.add( ball );
 
-  let angle = 4.7;
+  let angle = 0.1;
   let lastTime = 0;
   let firstIteration = true;
   let velocity = 0.0;
@@ -124,7 +123,7 @@ export function draw() {
     //console.log(velocity);
     hoop.rotation.y += omega*dt;
     hoop2.rotation.y = hoop.rotation.y;
-    let cords = getBallPos(angle, radius);
+    let cords = getBallPos(angle+4.7, radius);
     ball.position.set(cords[0]*Math.cos(hoop.rotation.y),cords[1], -cords[0]*Math.sin(hoop.rotation.y))
     renderer.render(scene,camera);
 
