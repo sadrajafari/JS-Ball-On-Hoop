@@ -61,9 +61,10 @@ function rk4(y,N,x,h,ynew,omega, radius,g){
     //console.log(dydx);
     return ynew;
 }
-
+export const context = {runloop: false};
+export let nextFrame = null;
 export function draw() {
-
+  if (nextFrame != null) cancelAnimationFrame(nextFrame);
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
   const viewSize = canvas.clientWidth;
@@ -111,26 +112,25 @@ export function draw() {
   const trailLen = Number(document.getElementById("trailLen").value);
   let balls = [];
   for (let i = 0; i < trailLen; i++) {
-    balls.push(new THREE.Mesh( geometryBall, new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0+i/trailLen} )));
+    balls.push(new THREE.Mesh( new THREE.SphereGeometry( i/trailLen*5, 5,5 ), new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0+i/trailLen} )));
   }
   balls.forEach(e=>scene.add(e));
   let prevCords = []; 
   prevCords.length = trailLen; prevCords.fill(0);;
-
+  //let funcID = Math.random();
 
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
+    //console.log(funcID);
     if (firstIteration){
       lastTime = time;
       firstIteration = false;
     }
     let dt = (time - lastTime) / 1000;
     lastTime = time;
-    //console.log(dt);
     let data = main(dt, velocity, angle, omega, radius, g);
     angle = data[0];
     velocity = data[1];
-    //console.log(velocity);
     hoop.rotation.y += omega*dt;
     hoop2.rotation.y = hoop.rotation.y;
     let cords = getBallPos(angle+3*Math.PI/2, 100);
@@ -146,9 +146,10 @@ export function draw() {
 
     renderer.render(scene,camera);
 
-    requestAnimationFrame(render);
+    nextFrame = requestAnimationFrame(render);
   }
-  requestAnimationFrame(render);
+  nextFrame = requestAnimationFrame(render);
+  
 }
 function getBallPos(angle,radius){
   let x = radius*Math.cos(angle);
