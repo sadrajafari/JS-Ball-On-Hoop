@@ -1,32 +1,30 @@
 import * as THREE from 'three';
-let g = 9.8;
 let k = 5.0;
 
-function main(dt, velocity, angle, omega, radius){
+function main(dt, velocity, angle, omega, radius, g){
   //console.log(omega)
     const N = 2;
-    let r = radius/1000;
+    let r = radius;
     let i;
     let j;
     let h = dt; //this will be delta T between animation
     let t = 0.0;
     let y = [angle,velocity];
     let ynew = [];
-    ynew = rk4(y,N,t,h,ynew,omega*3, r);
+    ynew = rk4(y,N,t,h,ynew,omega*3, r,g);
     y[0] = ynew[0];
     y[1] = ynew[1];
-    console.log(y[0])
     return y;
 }
 
-function derivs(t,y,dydt,omega,r){
+function derivs(t,y,dydt,omega,r,g){
     dydt[0] = y[1]/r;
     dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
     //console.log(dydt)
     return dydt;
 }
 
-function rk4(y,N,x,h,ynew,omega, radius){
+function rk4(y,N,x,h,ynew,omega, radius,g){
     let h6;
     let hh;
     let xh;
@@ -38,20 +36,20 @@ function rk4(y,N,x,h,ynew,omega, radius){
     hh = h*0.5;
     h6 = h/6.0;
     xh=x+hh;
-    dydx = derivs(x,y,dydx,omega, radius);//add stuff
+    dydx = derivs(x,y,dydx,omega, radius,g);//add stuff
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dydx[index];
     }
-    dyt = derivs(xh,yt,dyt,omega, radius);
+    dyt = derivs(xh,yt,dyt,omega, radius,g);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dyt[index];
     }
-    dym = derivs(xh,yt,dym,omega, radius);
+    dym = derivs(xh,yt,dym,omega, radius,g);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+h*dym[index];
         dym[index] = dyt[index]+dym[index];
     }
-    dyt = derivs(x+h,yt,dyt,omega, radius);
+    dyt = derivs(x+h,yt,dyt,omega, radius,g);
     for (index = 0; index <= N; index++){
         ynew[index]=y[index]+h6*(dydx[index]+dyt[index]+2.0*dym[index]);
     }
@@ -78,16 +76,20 @@ export function draw() {
   const scene = new THREE.Scene();
 
   let radius = Number(document.getElementById("radius").value);
-  let tube = Number(document.getElementById("tube").value);
-  let radialSegments = Number(document.getElementById("radialSegments").value); 
-  let tubularSegments = Number(document.getElementById("tubularSegments").value);
-  let arc = Number(document.getElementById("arc").value);
+  let tube = 3;
+  let radialSegments = 16; 
+  let tubularSegments = 81;
+  let arc = 6.28;
   let omega = Number(document.getElementById("omega").value);
+  let g = Number(document.getElementById("gravity").value);
+  let t  = Number(document.getElementById("time").value); // Ask about what time constant should do
+  let angle =  Number(document.getElementById("theta").value)*Math.PI/180;
+  let velocity = Number(document.getElementById("velocity").value);
 
   //const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-  const geometryHoop = new THREE.TorusGeometry(radius,tube,radialSegments,tubularSegments, arc);
+  const geometryHoop = new THREE.TorusGeometry(100,tube,radialSegments,tubularSegments, arc);
   const materialHoop = new THREE.MeshBasicMaterial({color: 0x44aa88}); 
-  const geometryHoop2 = new THREE.TorusGeometry(radius,tube*1.05,radialSegments,tubularSegments, arc/2);
+  const geometryHoop2 = new THREE.TorusGeometry(100,tube*1.05,radialSegments,tubularSegments, arc/2);
   const materialHoop2 = new THREE.MeshBasicMaterial({color: 0x0000FF}); 
   const hoop = new THREE.Mesh(geometryHoop, materialHoop);
   const hoop2 = new THREE.Mesh(geometryHoop2, materialHoop2);
@@ -102,12 +104,20 @@ export function draw() {
   const geometryBall = new THREE.SphereGeometry( 5, 5,5 );
   const materialBall = new THREE.MeshBasicMaterial( { color: 0xff0000} );
   const ball = new THREE.Mesh( geometryBall, materialBall );
-  scene.add( ball );
 
-  let angle = 0.1;
+  scene.add( ball );
   let lastTime = 0;
   let firstIteration = true;
-  let velocity = 0.0;
+  const trailLen = Number(document.getElementById("trailLen").value);
+  let balls = [];
+  for (let i = 0; i < trailLen; i++) {
+    balls.push(new THREE.Mesh( geometryBall, new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0+i/trailLen} )));
+  }
+  balls.forEach(e=>scene.add(e));
+  let prevCords = []; 
+  prevCords.length = trailLen; prevCords.fill(0);;
+
+
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
     if (firstIteration){
@@ -117,14 +127,23 @@ export function draw() {
     let dt = (time - lastTime) / 1000;
     lastTime = time;
     //console.log(dt);
-    let data = main(dt, velocity, angle, omega, radius);
+    let data = main(dt, velocity, angle, omega, radius, g);
     angle = data[0];
     velocity = data[1];
     //console.log(velocity);
     hoop.rotation.y += omega*dt;
     hoop2.rotation.y = hoop.rotation.y;
-    let cords = getBallPos(angle+4.7, radius);
-    ball.position.set(cords[0]*Math.cos(hoop.rotation.y),cords[1], -cords[0]*Math.sin(hoop.rotation.y))
+    let cords = getBallPos(angle+3*Math.PI/2, 100);
+    let xyz = {x:cords[0]*Math.cos(hoop.rotation.y), y: cords[1], z: -cords[0]*Math.sin(hoop.rotation.y)};
+    ball.position.set(xyz.x,xyz.y,xyz.z);
+    prevCords.push([xyz.x,xyz.y,xyz.z]);
+    prevCords.shift();
+    for (let i = 0; i < trailLen; i++) {
+      if (prevCords[i] != 0){
+      balls[i].position.set(prevCords[i][0],prevCords[i][1],prevCords[i][2])
+    }
+    }
+
     renderer.render(scene,camera);
 
     requestAnimationFrame(render);
