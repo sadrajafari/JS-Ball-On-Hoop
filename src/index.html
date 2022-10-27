@@ -16,8 +16,8 @@
         <label for="gravity">gravity:</label><br>
         <input type="text" id="gravity" name="gravity" value="9.8"><br>
 
-        <label for="time">τ:</label><br>
-        <input type="text" id="time" name="time" value="0.2"><br>
+        <label for="friction">k:</label><br>
+        <input type="text" id="friction" name="friction" value="5.0"><br>
 
         <label for="theta">θ:</label><br>
         <input type="text" id="theta" name="theta" value="30"><br>
@@ -28,11 +28,16 @@
         <label for="omega">ω:</label><br>
         <input type="text" id="omega" name="omega" value="6.28"><br>
 
+        <label for="simspeed">simulation speed:</label><br>
+        <input type="text" id="simSpeed" name="simspeed" value="1.0"><br>
+
         <label for="trailLen">trail length:</label><br>
         <input type="trailLen" id="trailLen" name="trailLen" value="20">
       </form>
       
     <canvas id="c" width = "350" height="350"></canvas>
+    <p>Time(seconds):</p>
+    <p id="time">0</p>
     <script  type="importmap">{
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
@@ -44,6 +49,7 @@
     <script type = "module">
         import{draw} from '/src/index.js'
         document.getElementById("generate").addEventListener("click", () => {
+            document.getElementById("time").innerHTML=0;
             draw();
         })
         

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-let k = 5.0;
 
-function main(dt, velocity, angle, omega, radius, g){
+
+function main(dt, velocity, angle, omega, radius, g, k){
   //console.log(omega)
     const N = 2;
     let r = radius;
@@ -11,20 +11,20 @@ function main(dt, velocity, angle, omega, radius, g){
     let t = 0.0;
     let y = [angle,velocity];
     let ynew = [];
-    ynew = rk4(y,N,t,h,ynew,omega*3, r,g);
+    ynew = rk4(y,N,t,h,ynew,omega*3, r,g, k);
     y[0] = ynew[0];
     y[1] = ynew[1];
     return y;
 }
 
-function derivs(t,y,dydt,omega,r,g){
+function derivs(t,y,dydt,omega,r,g,k){
     dydt[0] = y[1]/r;
     dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
     //console.log(dydt)
     return dydt;
 }
 
-function rk4(y,N,x,h,ynew,omega, radius,g){
+function rk4(y,N,x,h,ynew,omega, radius,g,k){
     let h6;
     let hh;
     let xh;
@@ -36,20 +36,20 @@ function rk4(y,N,x,h,ynew,omega, radius,g){
     hh = h*0.5;
     h6 = h/6.0;
     xh=x+hh;
-    dydx = derivs(x,y,dydx,omega, radius,g);//add stuff
+    dydx = derivs(x,y,dydx,omega, radius,g,k);//add stuff
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dydx[index];
     }
-    dyt = derivs(xh,yt,dyt,omega, radius,g);
+    dyt = derivs(xh,yt,dyt,omega, radius,g,k);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dyt[index];
     }
-    dym = derivs(xh,yt,dym,omega, radius,g);
+    dym = derivs(xh,yt,dym,omega, radius,g,k);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+h*dym[index];
         dym[index] = dyt[index]+dym[index];
     }
-    dyt = derivs(x+h,yt,dyt,omega, radius,g);
+    dyt = derivs(x+h,yt,dyt,omega, radius,g,k);
     for (index = 0; index <= N; index++){
         ynew[index]=y[index]+h6*(dydx[index]+dyt[index]+2.0*dym[index]);
     }
@@ -83,9 +83,10 @@ export function draw() {
   let arc = 6.28;
   let omega = Number(document.getElementById("omega").value);
   let g = Number(document.getElementById("gravity").value);
-  let t  = Number(document.getElementById("time").value); // Ask about what time constant should do
+  let k  = Number(document.getElementById("friction").value); // Ask about what time constant should do
   let angle =  Number(document.getElementById("theta").value)*Math.PI/180;
   let velocity = Number(document.getElementById("velocity").value);
+  let simSpeed = Number(document.getElementById("simSpeed").value);
 
   //const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
   const geometryHoop = new THREE.TorusGeometry(100,tube,radialSegments,tubularSegments, arc);
@@ -118,7 +119,7 @@ export function draw() {
   let prevCords = []; 
   prevCords.length = trailLen; prevCords.fill(0);;
   //let funcID = Math.random();
-
+  let timer = 0;
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
     //console.log(funcID);
@@ -126,9 +127,10 @@ export function draw() {
       lastTime = time;
       firstIteration = false;
     }
-    let dt = (time - lastTime) / 1000;
+    let dt = ((time - lastTime) / 1000)*simSpeed;
+    timer += dt;
     lastTime = time;
-    let data = main(dt, velocity, angle, omega, radius, g);
+    let data = main(dt, velocity, angle, omega, radius, g, k);
     angle = data[0];
     velocity = data[1];
     hoop.rotation.y += omega*dt;
@@ -143,7 +145,7 @@ export function draw() {
       balls[i].position.set(prevCords[i][0],prevCords[i][1],prevCords[i][2])
     }
     }
-
+    document.getElementById("time").innerHTML = timer.toFixed(3);
     renderer.render(scene,camera);
 
     nextFrame = requestAnimationFrame(render);
