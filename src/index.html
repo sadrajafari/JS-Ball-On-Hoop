@@ -38,23 +38,13 @@
 <link href = "../libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="../libraries/mathquill-0.10.1/mathquill.js"></script>
-<p>Type math here: <span id="math-field"></span></p>
+<p>theta dot = <span id="math-field"></span></p>
 <p>LaTeX of what you typed: <span id="latex"></span></p>
+<p>velocity dot = <span id="math-field2"></span></p>
+<p>LaTeX of what you typed: <span id="latex2"></span></p>
 
-<script>
-var mathFieldSpan = document.getElementById('math-field');
-var latexSpan = document.getElementById('latex');
 
-var MQ = MathQuill.getInterface(2); // for backcompat
-var mathField = MQ.MathField(mathFieldSpan, {
-  spaceBehavesLikeTab: true, // configurable
-  handlers: {
-    edit: function() { // useful event handlers
-      latexSpan.textContent = mathField.latex(); // simple API
-    }
-  }
-});
-</script>
+
       
     <canvas id="c" width = "350" height="350"></canvas>
     <p>Time(seconds):</p>
@@ -68,10 +58,34 @@ var mathField = MQ.MathField(mathFieldSpan, {
     <button id="generate" type="button">Generate</button>
     
     <script type = "module">
+       
+       let mathFieldSpan = document.getElementById('math-field');
+        let latexSpan = document.getElementById('latex');
+        let mathFieldSpan2 = document.getElementById('math-field2');
+        let latexSpan2 = document.getElementById('latex2');
+
+        let MQ = MathQuill.getInterface(2); // for backcompat
+        let mathField = MQ.MathField(mathFieldSpan, {
+        spaceBehavesLikeTab: true, // configurable
+        handlers: {
+            edit: function() { // useful event handlers
+            latexSpan.textContent = mathField.latex(); // simple API
+            }
+        }
+        });
+        
+        let mathField2 = MQ.MathField(mathFieldSpan2, {
+        spaceBehavesLikeTab: true, // configurable
+        handlers: {
+            edit: function() { // useful event handlers
+            latexSpan2.textContent = mathField2.latex(); // simple API
+            }
+        }
+        });
         import{draw} from '/src/index.js'
         document.getElementById("generate").addEventListener("click", () => {
             document.getElementById("time").innerHTML=0;
-            draw();
+            draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()});
         })
         
         

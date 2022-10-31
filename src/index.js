@@ -63,7 +63,7 @@ function rk4(y,N,x,h,ynew,omega, radius,g,k){
 }
 export const context = {runloop: false};
 export let nextFrame = null;
-export function draw() {
+export function draw(equations) {
   if (nextFrame != null) cancelAnimationFrame(nextFrame);
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
