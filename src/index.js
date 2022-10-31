@@ -67,12 +67,15 @@ export function draw() {
   if (nextFrame != null) cancelAnimationFrame(nextFrame);
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
+  //renderer.setSize(window.innerWidth, window.innerHeight);
   const viewSize = canvas.clientWidth;
   const aspectRatio = canvas.clientWidth/canvas.clientHeight;
-  const near = -1000;
+  const near = 0.1;
   const far = 1000;
-  const camera = new THREE.OrthographicCamera(-aspectRatio*viewSize/2,aspectRatio*viewSize/2, viewSize/2,-viewSize/2,near,far)
-  camera.position.z = 100;
+  const camera = new THREE.PerspectiveCamera(25,aspectRatio,near,far);
+  //const camera = new THREE.OrthographicCamera(-aspectRatio*viewSize/2,aspectRatio*viewSize/2, viewSize/2,-viewSize/2,near,far)
+  camera.position.z = 500;
+  
 
   const scene = new THREE.Scene();
 
@@ -80,7 +83,7 @@ export function draw() {
   let tube = 3;
   let radialSegments = 16; 
   let tubularSegments = 81;
-  let arc = 6.28;
+  let arc = 2*Math.PI;
   let omega = Number(document.getElementById("omega").value);
   let g = Number(document.getElementById("gravity").value);
   let k  = Number(document.getElementById("friction").value); // Ask about what time constant should do
@@ -89,6 +92,7 @@ export function draw() {
   let simSpeed = Number(document.getElementById("simSpeed").value);
 
   //const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+
   const geometryHoop = new THREE.TorusGeometry(100,tube,radialSegments,tubularSegments, arc);
   const materialHoop = new THREE.MeshBasicMaterial({color: 0x44aa88}); 
   const geometryHoop2 = new THREE.TorusGeometry(100,tube*1.05,radialSegments,tubularSegments, arc/2);
