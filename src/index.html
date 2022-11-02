@@ -22,7 +22,7 @@
         <label for="theta">θ:</label><br>
         <input type="text" id="theta" name="theta" value="30"><br>
 
-        <label for="velocity">V:</label><br>
+        <label for="velocity">v:</label><br>
         <input type="text" id="velocity" name="velocity" value="0.6"><br>
 
         <label for="omega">ω:</label><br>
@@ -36,7 +36,7 @@
       </form>
       <!-- mathQuill css -->
 <link href = "../libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="../libraries/jquery/dist/jquery.min.js"></script>
 <script src="../libraries/mathquill-0.10.1/mathquill.js"></script>
 <p>theta dot = <span id="math-field"></span></p>
 <p>LaTeX of what you typed: <span id="latex"></span></p>
@@ -51,8 +51,7 @@
     <p id="time">0</p>
     <script  type="importmap">{
         "imports": {
-            "three": "https://threejs.org/build/three.module.js",
-            "fs": ""
+            "three": "../libraries/three/build/three.module.js",
         }
     }</script>
     <button id="generate" type="button">Generate</button>

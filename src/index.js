@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+//import evaluatex from "evaluatex";
 
 
-function main(dt, velocity, angle, omega, radius, g, k){
+function main(dt, velocity, angle, omega, radius, g, k, equations){
   //console.log(omega)
     const N = 2;
     let r = radius;
@@ -11,20 +12,22 @@ function main(dt, velocity, angle, omega, radius, g, k){
     let t = 0.0;
     let y = [angle,velocity];
     let ynew = [];
-    ynew = rk4(y,N,t,h,ynew,omega*3, r,g, k);
+    ynew = rk4(y,N,t,h,ynew,omega*3, r,g, k, equations);
     y[0] = ynew[0];
     y[1] = ynew[1];
     return y;
 }
 
-function derivs(t,y,dydt,omega,r,g,k){
+function derivs(t,y,dydt,omega,r,g,k, equations){
+  //console.log(equations.thetadot);
+  //const thetadot = evaluatex(equations.thetadot, {v:y[0],k:k,r:r,g:g,ω:omega,θ:y[1]}, {latex:true});
     dydt[0] = y[1]/r;
     dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
     //console.log(dydt)
     return dydt;
 }
 
-function rk4(y,N,x,h,ynew,omega, radius,g,k){
+function rk4(y,N,x,h,ynew,omega, radius,g,k, equations){
     let h6;
     let hh;
     let xh;
@@ -36,20 +39,20 @@ function rk4(y,N,x,h,ynew,omega, radius,g,k){
     hh = h*0.5;
     h6 = h/6.0;
     xh=x+hh;
-    dydx = derivs(x,y,dydx,omega, radius,g,k);//add stuff
+    dydx = derivs(x,y,dydx,omega, radius,g,k, equations);//add stuff
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dydx[index];
     }
-    dyt = derivs(xh,yt,dyt,omega, radius,g,k);
+    dyt = derivs(xh,yt,dyt,omega, radius,g,k, equations);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dyt[index];
     }
-    dym = derivs(xh,yt,dym,omega, radius,g,k);
+    dym = derivs(xh,yt,dym,omega, radius,g,k, equations);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+h*dym[index];
         dym[index] = dyt[index]+dym[index];
     }
-    dyt = derivs(x+h,yt,dyt,omega, radius,g,k);
+    dyt = derivs(x+h,yt,dyt,omega, radius,g,k, equations);
     for (index = 0; index <= N; index++){
         ynew[index]=y[index]+h6*(dydx[index]+dyt[index]+2.0*dym[index]);
     }
@@ -131,10 +134,10 @@ export function draw(equations) {
       lastTime = time;
       firstIteration = false;
     }
-    let dt = ((time - lastTime) / 1000)*simSpeed;
+    let dt = ((time - lastTime) *simSpeed/ 1000);//simspeed kinda causes unexpected behavior
     timer += dt;
     lastTime = time;
-    let data = main(dt, velocity, angle, omega, radius, g, k);
+    let data = main(dt, velocity, angle, omega, radius, g, k, equations);
     angle = data[0];
     velocity = data[1];
     hoop.rotation.y += omega*dt;
