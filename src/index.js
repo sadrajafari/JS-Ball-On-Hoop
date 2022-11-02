@@ -1,5 +1,6 @@
+
 import * as THREE from 'three';
-//import evaluatex from "evaluatex";
+//import * as evaluatex from "./bundle2.js";
 
 
 function main(dt, velocity, angle, omega, radius, g, k, equations){
@@ -12,7 +13,7 @@ function main(dt, velocity, angle, omega, radius, g, k, equations){
     let t = 0.0;
     let y = [angle,velocity];
     let ynew = [];
-    ynew = rk4(y,N,t,h,ynew,omega*3, r,g, k, equations);
+    ynew = rk4(y,N,t,h,ynew,omega, r,g, k, equations);
     y[0] = ynew[0];
     y[1] = ynew[1];
     return y;
@@ -20,10 +21,23 @@ function main(dt, velocity, angle, omega, radius, g, k, equations){
 
 function derivs(t,y,dydt,omega,r,g,k, equations){
   //console.log(equations.thetadot);
-  //const thetadot = evaluatex(equations.thetadot, {v:y[0],k:k,r:r,g:g,ω:omega,θ:y[1]}, {latex:true});
+
+  if (equations.thetadot != ''){
+    const thetadot = window.evaluatex(equations.thetadot, {k:k,r:r,g:g,o:omega}, {latex:true});
+    dydt[0]= thetadot({v:y[1],t:y[0]});
+  } else {
     dydt[0] = y[1]/r;
+  }
+
+  if (equations.velocitydot != ''){
+    const velocitydot = window.evaluatex(equations.velocitydot, {k:k,r:r,g:g,o:omega}, {latex:true});
+    dydt[1]= velocitydot({v:y[1],t:y[0]});
+  } else{
     dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
-    //console.log(dydt)
+  }
+  
+
+  
     return dydt;
 }
 

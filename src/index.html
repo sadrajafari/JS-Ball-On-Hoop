@@ -38,6 +38,9 @@
 <link href = "../libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
 <script src="../libraries/jquery/dist/jquery.min.js"></script>
 <script src="../libraries/mathquill-0.10.1/mathquill.js"></script>
+<script src="./bundle2.js"></script>
+
+<p>Leave Empty for default equations, (use o for ω, use t for θ):</p>
 <p>theta dot = <span id="math-field"></span></p>
 <p>LaTeX of what you typed: <span id="latex"></span></p>
 <p>velocity dot = <span id="math-field2"></span></p>
@@ -51,7 +54,8 @@
     <p id="time">0</p>
     <script  type="importmap">{
         "imports": {
-            "three": "../libraries/three/build/three.module.js",
+            "three": "https://threejs.org/build/three.module.js",
+            "tex-math-parser": "https://cdn.jsdelivr.net/npm/tex-math-parser"
         }
     }</script>
     <button id="generate" type="button">Generate</button>
@@ -62,7 +66,6 @@
         let latexSpan = document.getElementById('latex');
         let mathFieldSpan2 = document.getElementById('math-field2');
         let latexSpan2 = document.getElementById('latex2');
-
         let MQ = MathQuill.getInterface(2); // for backcompat
         let mathField = MQ.MathField(mathFieldSpan, {
         spaceBehavesLikeTab: true, // configurable
@@ -84,7 +87,7 @@
         import{draw} from '/src/index.js'
         document.getElementById("generate").addEventListener("click", () => {
             document.getElementById("time").innerHTML=0;
-            draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()});
+            draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},window.evaluatex,window.tex);
         })
         
         
