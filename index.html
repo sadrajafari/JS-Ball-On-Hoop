@@ -35,10 +35,10 @@
         <input type="trailLen" id="trailLen" name="trailLen" value="20">
       </form>
       <!-- mathQuill css -->
-<link href = "../libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
-<script src="../libraries/jquery/dist/jquery.min.js"></script>
-<script src="../libraries/mathquill-0.10.1/mathquill.js"></script>
-<script src="./bundle2.js"></script>
+<link href = "./libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
+<script src="./libraries/jquery/dist/jquery.min.js"></script>
+<script src="./libraries/mathquill-0.10.1/mathquill.js"></script>
+<script src="./src/bundle2.js"></script>
 
 <p>Leave Empty for default equations, (use o for ω, use t for θ):</p>
 <p>theta dot = <span id="math-field"></span></p>
@@ -84,7 +84,7 @@
             }
         }
         });
-        import{draw} from '/src/index.js'
+        import{draw} from './src/index.js'
         document.getElementById("generate").addEventListener("click", () => {
             document.getElementById("time").innerHTML=0;
             draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},window.evaluatex,window.tex);
