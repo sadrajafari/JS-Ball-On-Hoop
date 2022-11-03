@@ -42,6 +42,7 @@ function main(){
 
 function derivs(t,y,dydt){
     dydt[0] = y[1]/r;
+    // dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
     dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
     return dydt;
 }
