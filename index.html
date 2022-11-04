@@ -121,7 +121,7 @@
         })
         window.refresh = function refreshDraw(){
             document.getElementById("time").innerHTML=0;
-            document.getElementById("equations-label").innerHTML="Leave Empty for default equations, (use o for ω, use t for θ):";
+            document.getElementById("equations-label").innerHTML="Type equations below:, (use o for ω, use t for θ):";
             draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},window.evaluatex,window.tex);
             draw2();
         }

@@ -26,7 +26,7 @@ function derivs(t,y,dydt,omega,r,g,k, equations){
     const thetadot = window.evaluatex(equations.thetadot, {k:k,r:r,g:g,o:omega}, {latex:true});
     dydt[0]= thetadot({v:y[1],t:y[0]});
     } catch (err){
-      document.getElementById("equations-label").innerHTML="Leave Empty for default equations, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
+      document.getElementById("equations-label").innerHTML="Type equations below:, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
     }
   
 
@@ -35,7 +35,7 @@ function derivs(t,y,dydt,omega,r,g,k, equations){
     dydt[1]= velocitydot({v:y[1],t:y[0]});
   } catch(err){
     console.log("this printing?");
-    document.getElementById("equations-label").innerHTML="Leave Empty for default equations, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
+    document.getElementById("equations-label").innerHTML="Type equations below:, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
   }
   
 
