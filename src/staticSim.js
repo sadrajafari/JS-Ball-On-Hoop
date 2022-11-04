@@ -1,9 +1,8 @@
-
 import * as THREE from 'three';
 //import * as evaluatex from "./bundle2.js";
 
 
-function main(dt, velocity, angle, omega, radius, g, k, equations){
+function main(dt, velocity, angle, omega, radius, g, k){
   //console.log(omega)
     const N = 2;
     let r = radius;
@@ -13,36 +12,20 @@ function main(dt, velocity, angle, omega, radius, g, k, equations){
     let t = 0.0;
     let y = [angle,velocity];
     let ynew = [];
-    ynew = rk4(y,N,t,h,ynew,omega, r,g, k, equations);
+    ynew = rk4(y,N,t,h,ynew,omega, r,g, k);
     y[0] = ynew[0];
     y[1] = ynew[1];
     return y;
 }
 
-function derivs(t,y,dydt,omega,r,g,k, equations){
+function derivs(t,y,dydt,omega,r,g,k){
   //console.log(equations.thetadot);
-
-  try{
-    const thetadot = window.evaluatex(equations.thetadot, {k:k,r:r,g:g,o:omega}, {latex:true});
-    dydt[0]= thetadot({v:y[1],t:y[0]});
-    } catch (err){
-      document.getElementById("equations-label").innerHTML="Leave Empty for default equations, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
-    }
-  
-
-  try{
-    const velocitydot = window.evaluatex(equations.velocitydot, {k:k,r:r,g:g,o:omega}, {latex:true});
-    dydt[1]= velocitydot({v:y[1],t:y[0]});
-  } catch(err){
-    document.getElementById("equations-label").innerHTML="Leave Empty for default equations, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
-  }
-  
-
-  
+    dydt[0] = y[1]/r;
+    dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
     return dydt;
 }
 
-function rk4(y,N,x,h,ynew,omega, radius,g,k, equations){
+function rk4(y,N,x,h,ynew,omega, radius,g,k){
     let h6;
     let hh;
     let xh;
@@ -54,20 +37,20 @@ function rk4(y,N,x,h,ynew,omega, radius,g,k, equations){
     hh = h*0.5;
     h6 = h/6.0;
     xh=x+hh;
-    dydx = derivs(x,y,dydx,omega, radius,g,k, equations);//add stuff
+    dydx = derivs(x,y,dydx,omega, radius,g,k);//add stuff
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dydx[index];
     }
-    dyt = derivs(xh,yt,dyt,omega, radius,g,k, equations);
+    dyt = derivs(xh,yt,dyt,omega, radius,g,k);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+hh*dyt[index];
     }
-    dym = derivs(xh,yt,dym,omega, radius,g,k, equations);
+    dym = derivs(xh,yt,dym,omega, radius,g,k);
     for (index = 0; index <= N; index++){
         yt[index] = y[index]+h*dym[index];
         dym[index] = dyt[index]+dym[index];
     }
-    dyt = derivs(x+h,yt,dyt,omega, radius,g,k, equations);
+    dyt = derivs(x+h,yt,dyt,omega, radius,g,k);
     for (index = 0; index <= N; index++){
         ynew[index]=y[index]+h6*(dydx[index]+dyt[index]+2.0*dym[index]);
     }
@@ -81,9 +64,9 @@ function rk4(y,N,x,h,ynew,omega, radius,g,k, equations){
 }
 export const context = {runloop: false};
 export let nextFrame = null;
-export function draw(equations) {
+export function draw2() {
   if (nextFrame != null) cancelAnimationFrame(nextFrame);
-  const canvas = document.querySelector('#c');
+  const canvas = document.querySelector('#c2');
   const renderer = new THREE.WebGLRenderer({canvas});
   //renderer.setSize(window.innerWidth, window.innerHeight);
   const viewSize = canvas.clientWidth;
@@ -152,7 +135,7 @@ export function draw(equations) {
     let dt = ((time - lastTime) *simSpeed/ 1000);//simspeed kinda causes unexpected behavior
     timer += dt;
     lastTime = time;
-    let data = main(dt, velocity, angle, omega, radius, g, k, equations);
+    let data = main(dt, velocity, angle, omega, radius, g, k);
     angle = data[0];
     velocity = data[1];
     hoop.rotation.y += omega*dt;

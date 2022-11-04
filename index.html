@@ -5,53 +5,77 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .canvas-form{
+            display: flex;
+        }
+        .time-label{
+            text-align: center;
+        }
+        .time-value{
+            text-align: center;
+        }
+        .labels{
+            display: flex;
+            justify-content: space-between;
+            
+        }
+    </style>
 </head>
+
 <body>
     <h1>Hoop Generator</h1>>
-    
-    <form>
+    <div class="labels">
+        <p>Variables:</p>
+        <p>Your Equations:</p>
+        <p></p>
+        <p>Actual Equation:</p>
+        <p></p>
+    </div>
+    <div class = "canvas-form">
+        
+    <form class = "variables">
         <label for="radius">radius:</label><br>
-        <input type="text" id="radius" name="radius" value=".1"><br>
+        <input type="text" id="radius" name="radius" value=".1" onBlur ="refresh()"><br>
 
         <label for="gravity">gravity:</label><br>
-        <input type="text" id="gravity" name="gravity" value="9.8"><br>
+        <input type="text" id="gravity" name="gravity" value="9.8" onBlur ="refresh()"><br>
 
         <label for="friction">k:</label><br>
-        <input type="text" id="friction" name="friction" value="5.0"><br>
+        <input type="text" id="friction" name="friction" value="5.0" onBlur ="refresh()"><br>
 
         <label for="theta">θ:</label><br>
-        <input type="text" id="theta" name="theta" value="30"><br>
+        <input type="text" id="theta" name="theta" value="30" onBlur ="refresh()"><br>
 
         <label for="velocity">v:</label><br>
-        <input type="text" id="velocity" name="velocity" value="0.6"><br>
+        <input type="text" id="velocity" name="velocity" value="0.6" onBlur ="refresh()"><br>
 
         <label for="omega">ω:</label><br>
-        <input type="text" id="omega" name="omega" value="6.28"><br>
+        <input type="text" id="omega" name="omega" value="11" onBlur ="refresh()"><br>
 
         <label for="simspeed">simulation speed:</label><br>
-        <input type="text" id="simSpeed" name="simspeed" value="1.0"><br>
+        <input type="text" id="simSpeed" name="simspeed" value="1.0" onBlur ="refresh()"><br>
 
         <label for="trailLen">trail length:</label><br>
-        <input type="trailLen" id="trailLen" name="trailLen" value="20">
-      </form>
-      <!-- mathQuill css -->
-<link href = "./libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
+        <input type="trailLen" id="trailLen" name="trailLen" value="20" onBlur ="refresh()">
+    </form>
+
+
+    <canvas class = "canvas1" id="c" width = "350" height="350"></canvas>
+    <canvas class = "canvas2" id="c2" width = "350" height="350"></canvas>
+    </div>
+
+    <p class="time-label">Time(seconds):</p>
+    <p class = "time-value" id="time">0</p>
+    <p id = "equations-label">Leave Empty for default equations, (use o for ω, use t for θ):</p>
+    <p id = "thetadot">θ&#x307 = <span onchange = "refresh()" id="math-field"></span></p>
+    <p id ="velocitydot">v&#x307 = <span onchange = "refresh()" id="math-field2"></span></p>
+    
+
+    <link href = "./libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
 <script src="./libraries/jquery/dist/jquery.min.js"></script>
 <script src="./libraries/mathquill-0.10.1/mathquill.js"></script>
 <script src="./src/bundle2.js"></script>
-
-<p>Leave Empty for default equations, (use o for ω, use t for θ):</p>
-<p>theta dot = <span id="math-field"></span></p>
-<p>LaTeX of what you typed: <span id="latex"></span></p>
-<p>velocity dot = <span id="math-field2"></span></p>
-<p>LaTeX of what you typed: <span id="latex2"></span></p>
-
-
-
-      
-    <canvas id="c" width = "350" height="350"></canvas>
-    <p>Time(seconds):</p>
-    <p id="time">0</p>
     <script  type="importmap">{
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
@@ -63,15 +87,16 @@
     <script type = "module">
        
        let mathFieldSpan = document.getElementById('math-field');
-        let latexSpan = document.getElementById('latex');
+        let latexSpan = "";
         let mathFieldSpan2 = document.getElementById('math-field2');
-        let latexSpan2 = document.getElementById('latex2');
+        let latexSpan2 = "";
         let MQ = MathQuill.getInterface(2); // for backcompat
         let mathField = MQ.MathField(mathFieldSpan, {
         spaceBehavesLikeTab: true, // configurable
         handlers: {
             edit: function() { // useful event handlers
-            latexSpan.textContent = mathField.latex(); // simple API
+            latexSpan = mathField.latex(); // simple API
+            refresh();
             }
         }
         });
@@ -80,16 +105,25 @@
         spaceBehavesLikeTab: true, // configurable
         handlers: {
             edit: function() { // useful event handlers
-            latexSpan2.textContent = mathField2.latex(); // simple API
+            latexSpan2 = mathField2.latex(); // simple API
+            refresh();
             }
+            
         }
         });
-        import{draw} from './src/index.js'
+        import{draw} from './src/index.js';
+        import {draw2} from './src/staticSim.js';
         document.getElementById("generate").addEventListener("click", () => {
             document.getElementById("time").innerHTML=0;
             draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},window.evaluatex,window.tex);
+            draw2();
         })
-        
+        window.refresh = function refreshDraw(){
+            document.getElementById("time").innerHTML=0;
+            document.getElementById("equations-label").innerHTML="Leave Empty for default equations, (use o for ω, use t for θ):";
+            draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},window.evaluatex,window.tex);
+            draw2();
+        }
         
                 
 
