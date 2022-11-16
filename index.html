@@ -21,6 +21,10 @@
             justify-content: space-between;
             
         }
+        .graphs{
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 
@@ -57,8 +61,14 @@
         <label for="simspeed">simulation speed:</label><br>
         <input type="text" id="simSpeed" name="simspeed" value="1.0" onBlur ="refresh()"><br>
 
+        <label for="graphint">Graph update interval:</label><br>
+        <input type="text" id="graphint" name="graphint" value=".05" onBlur ="refresh()"><br>
+
         <label for="trailLen">trail length:</label><br>
-        <input type="trailLen" id="trailLen" name="trailLen" value="20" onBlur ="refresh()">
+        <input type="trailLen" id="trailLen" name="trailLen" value="20" onBlur ="refresh()"><br>
+
+        <input type="checkbox" id="projection" name="projection" value="false">
+        <label for="projection"> Project trail on hoop?</label><br>
     </form>
 
 
@@ -80,10 +90,16 @@
     <script  type="importmap">{
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
-            "tex-math-parser": "https://cdn.jsdelivr.net/npm/tex-math-parser"
+            "d3" : "https://d3js.org/d3.v6.js"
         }
     }</script>
     <button id="generate" type="button">Generate</button>
+    <div class="graphs">
+    <div id="variableSim-theta"></div>
+    <div id="variableSim-velocity"></div>
+    <div id="staticSim-theta"></div>
+    <div id="staticSim-velocity"></div>
+    </div>
     
     <script type = "module">
        
@@ -118,6 +134,7 @@
             document.getElementById("time").innerHTML=0;
             draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},window.evaluatex,window.tex);
             draw2();
+            
         })
         window.refresh = function refreshDraw(){
             document.getElementById("time").innerHTML=0;
