@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 //import * as evaluatex from "./bundle2.js";
-
+//testing somehting with comment here
 
 function main(dt, velocity, angle, omega, radius, g, k, equations){
   //console.log(omega)

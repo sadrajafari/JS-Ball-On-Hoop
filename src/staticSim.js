@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 
-
+//comment for testing something on github
 function main(dt, velocity, angle, omega, radius, g, k){
   //console.log(omega)
     const N = 2;
