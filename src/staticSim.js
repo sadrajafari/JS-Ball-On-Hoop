@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-//import * as evaluatex from "./bundle2.js";
+import * as d3 from "https://cdn.skypack.dev/d3@7";
 
 
 function main(dt, velocity, angle, omega, radius, g, k){
@@ -65,6 +65,8 @@ function rk4(y,N,x,h,ynew,omega, radius,g,k){
 export const context = {runloop: false};
 export let nextFrame = null;
 export function draw2() {
+  let globalData = [];
+  
   if (nextFrame != null) cancelAnimationFrame(nextFrame);
   const canvas = document.querySelector('#c2');
   const renderer = new THREE.WebGLRenderer({canvas});
@@ -117,26 +119,45 @@ export function draw2() {
   let firstIteration = true;
   const trailLen = Number(document.getElementById("trailLen").value);
   let balls = [];
+  let ballsCords = [];
   for (let i = 0; i < trailLen; i++) {
     balls.push(new THREE.Mesh( new THREE.SphereGeometry( i/trailLen*5, 5,5 ), new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0+i/trailLen} )));
+    ballsCords.push(0);
   }
   balls.forEach(e=>scene.add(e));
   let prevCords = []; 
   prevCords.length = trailLen; prevCords.fill(0);;
   //let funcID = Math.random();
   let timer = 0;
+  let shouldGraph = true;
+  let graphTimer = 0;
+  let graphUpdateInterval = Number(document.getElementById("graphint").value);
+  let project = document.getElementById("projection").checked;
   renderer.render(scene, camera);
+  
   function render(time){ // find delta t between animations and plug in as h in rk4
+
+
     //console.log(funcID);
     if (firstIteration){
       lastTime = time;
       firstIteration = false;
     }
-    let dt = ((time - lastTime) *simSpeed/ 1000);//simspeed kinda causes unexpected behavior
+    graphTimer += (time - lastTime)/1000;
+    let dt = ((time - lastTime) *simSpeed/ 1000);
     timer += dt;
     lastTime = time;
     let data = main(dt, velocity, angle, omega, radius, g, k);
     angle = data[0];
+    if (project){
+          ballsCords.push(angle);
+          ballsCords.shift();
+        }
+    console.log(ballsCords);
+    angle = angle%(2*Math.PI);
+    if (angle < 0){
+      angle = 2*Math.PI - Math.abs(angle)
+    }
     velocity = data[1];
     hoop.rotation.y += omega*dt;
     hoop2.rotation.y = hoop.rotation.y;
@@ -145,12 +166,32 @@ export function draw2() {
     ball.position.set(xyz.x,xyz.y,xyz.z);
     prevCords.push([xyz.x,xyz.y,xyz.z]);
     prevCords.shift();
+    
     for (let i = 0; i < trailLen; i++) {
       if (prevCords[i] != 0){
+        if (project){
+          let tempCord = getBallPos(ballsCords[i]+3*Math.PI/2, 100);
+          balls[i].position.set(tempCord[0]*Math.cos(hoop.rotation.y),  tempCord[1],  -tempCord[0]*Math.sin(hoop.rotation.y))
+        } else {
       balls[i].position.set(prevCords[i][0],prevCords[i][1],prevCords[i][2])
+      }
     }
     }
+    
+    
+    if (graphTimer > graphUpdateInterval){
+      graphTimer = 0;
+    if (shouldGraph){
+    globalData.push([timer.toFixed(3),angle,velocity]);
+    
+    document.getElementById("staticSim-theta").innerHTML = "";
+    document.getElementById("staticSim-velocity").innerHTML = "";
+    shouldGraph = drawTheta(globalData);
+    drawVelocity(globalData);
     document.getElementById("time").innerHTML = timer.toFixed(3);
+    }
+    }
+
     renderer.render(scene,camera);
 
     nextFrame = requestAnimationFrame(render);
@@ -158,6 +199,8 @@ export function draw2() {
   nextFrame = requestAnimationFrame(render);
   
 }
+
+
 function getBallPos(angle,radius){
   let x = radius*Math.cos(angle);
   let y = radius*Math.sin(angle);
@@ -165,5 +208,145 @@ return [x,y];
 }
 
 
+function drawTheta(globalData){
+  
+  const margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+const svg = d3.select("#staticSim-theta")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+//Read the data
+
+    // Add X axis --> it is a date format
+    const x = d3.scaleLinear()
+      .domain([0,5])
+      .range([ 0, width]);
+    svg.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x));
+
+    // Add Y axis
+    const y = d3.scaleLinear()
+      .domain([0, 6.28])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    
+
+    // Add the line
+    svg
+      .append("path")
+      .datum(globalData)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d[0]) })
+        .y(function(d) { return y(d[1]) })
+        )
+    svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -(height/2))
+    .attr("y", -30)
+    .style("text-anchor", "middle")
+    .style("font-size", "30px")
+    .text("θ")
+
+    svg.append("text")
+    .attr("transform", "translate(" + (width/2) + "," + (height + 30) + ")")
+    .style("text-anchor", "middle")
+    .text("Time (s)")
+
+    svg.append("text")
+    .attr("x", (height/2))
+    .attr("y", 20)
+    .style("text-anchor", "middle")
+    .style("font-size", "20px")
+    .text("Theta over Time: Actual Equation")
+        if (globalData[globalData.length-1][0] > 5){
+          return false;
+        }
+      return true;
+}
+
+
+function drawVelocity(globalData){
+  
+  const margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+const svg = d3.select("#staticSim-velocity")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+//Read the data
+
+    // Add X axis --> it is a date format
+    const x = d3.scaleLinear()
+      .domain([0,5])
+      .range([ 0, width]);
+    svg.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x));
+
+    // Add Y axis
+    const y = d3.scaleLinear()
+      .domain([-10, 10])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    
+
+    // Add the line
+    svg
+      .append("path")
+      .datum(globalData)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d[0]) })
+        .y(function(d) { return y(d[2]) })
+        )
+
+        svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -(height/2))
+    .attr("y", -30)
+    .style("text-anchor", "middle")
+    .style("font-size", "30px")
+    .text("Velocity")
+
+    svg.append("text")
+    .attr("transform", "translate(" + (width/2) + "," + (height + 30) + ")")
+    .style("text-anchor", "middle")
+    .text("Time (s)")
+
+    svg.append("text")
+    .attr("x", (height/2))
+    .attr("y", 20)
+    .style("text-anchor", "middle")
+    .style("font-size", "20px")
+    .text("Velocity over Time: Actual Equation")
+
+        if (globalData[globalData.length-1][0] > 5){
+          return false;
+        }
+      return true;
+}
 
 
