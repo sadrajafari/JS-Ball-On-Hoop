@@ -132,6 +132,7 @@ export function draw2() {
   let shouldGraph = true;
   let graphTimer = 0;
   let graphUpdateInterval = Number(document.getElementById("graphint").value);
+  let graphLen = Number(document.getElementById("graphlen").value);
   let project = document.getElementById("projection").checked;
   renderer.render(scene, camera);
   
@@ -186,8 +187,8 @@ export function draw2() {
     
     document.getElementById("staticSim-theta").innerHTML = "";
     document.getElementById("staticSim-velocity").innerHTML = "";
-    shouldGraph = drawTheta(globalData);
-    drawVelocity(globalData);
+    shouldGraph = drawTheta(globalData,graphLen);
+    drawVelocity(globalData,graphLen);
     document.getElementById("time").innerHTML = timer.toFixed(3);
     }
     }
@@ -208,7 +209,7 @@ return [x,y];
 }
 
 
-function drawTheta(globalData){
+function drawTheta(globalData,graphLen){
   
   const margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = 460 - margin.left - margin.right,
@@ -226,7 +227,7 @@ const svg = d3.select("#staticSim-theta")
 
     // Add X axis --> it is a date format
     const x = d3.scaleLinear()
-      .domain([0,5])
+      .domain([0,graphLen])
       .range([ 0, width]);
     svg.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -271,14 +272,14 @@ const svg = d3.select("#staticSim-theta")
     .style("text-anchor", "middle")
     .style("font-size", "20px")
     .text("Theta over Time: Actual Equation")
-        if (globalData[globalData.length-1][0] > 5){
+        if (globalData[globalData.length-1][0] > graphLen){
           return false;
         }
       return true;
 }
 
 
-function drawVelocity(globalData){
+function drawVelocity(globalData,graphLen){
   
   const margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = 460 - margin.left - margin.right,
@@ -296,7 +297,7 @@ const svg = d3.select("#staticSim-velocity")
 
     // Add X axis --> it is a date format
     const x = d3.scaleLinear()
-      .domain([0,5])
+      .domain([0,graphLen])
       .range([ 0, width]);
     svg.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -343,7 +344,7 @@ const svg = d3.select("#staticSim-velocity")
     .style("font-size", "20px")
     .text("Velocity over Time: Actual Equation")
 
-        if (globalData[globalData.length-1][0] > 5){
+        if (globalData[globalData.length-1][0] > graphLen){
           return false;
         }
       return true;

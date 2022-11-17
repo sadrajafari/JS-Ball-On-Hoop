@@ -137,6 +137,7 @@ export function draw(equations) {
   let lastTime = 0;
   let firstIteration = true;
   const trailLen = Number(document.getElementById("trailLen").value);
+
   let balls = [];
   let ballsCords = [];
   for (let i = 0; i < trailLen; i++) {
@@ -151,6 +152,7 @@ export function draw(equations) {
   let shouldGraph = true;
   let graphTimer = 0;
   let graphUpdateInterval = Number(document.getElementById("graphint").value);
+  let graphLen = Number(document.getElementById("graphlen").value);
   let project = document.getElementById("projection").checked;
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
@@ -199,8 +201,8 @@ export function draw(equations) {
     
     document.getElementById("variableSim-theta").innerHTML = "";
     document.getElementById("variableSim-velocity").innerHTML = "";
-    shouldGraph = drawTheta(globalData);
-    drawVelocity(globalData);
+    shouldGraph = drawTheta(globalData,graphLen);
+    drawVelocity(globalData,graphLen);
     document.getElementById("time").innerHTML = timer.toFixed(3);
     }
     }
@@ -219,7 +221,7 @@ function getBallPos(angle,radius){
 return [x,y];
 }
 
-function drawTheta(globalData){
+function drawTheta(globalData,graphLen){
   
   const margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = 460 - margin.left - margin.right,
@@ -237,7 +239,7 @@ const svg = d3.select("#variableSim-theta")
 
     // Add X axis --> it is a date format
     const x = d3.scaleLinear()
-      .domain([0,5])
+      .domain([0,graphLen])
       .range([ 0, width]);
     svg.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -282,14 +284,14 @@ const svg = d3.select("#variableSim-theta")
     .style("text-anchor", "middle")
     .style("font-size", "20px")
     .text("Theta over Time: Inputed Equation")
-        if (globalData[globalData.length-1][0] > 5){
+        if (globalData[globalData.length-1][0] > graphLen){
           return false;
         }
       return true;
 }
 
 
-function drawVelocity(globalData){
+function drawVelocity(globalData,graphLen){
   
   const margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = 460 - margin.left - margin.right,
@@ -307,7 +309,7 @@ const svg = d3.select("#variableSim-velocity")
 
     // Add X axis --> it is a date format
     const x = d3.scaleLinear()
-      .domain([0,5])
+      .domain([0,graphLen])
       .range([ 0, width]);
     svg.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -354,7 +356,7 @@ const svg = d3.select("#variableSim-velocity")
     .style("font-size", "20px")
     .text("Velocity over Time: Inputed Equation")
 
-        if (globalData[globalData.length-1][0] > 5){
+        if (globalData[globalData.length-1][0] > graphLen){
           return false;
         }
       return true;
