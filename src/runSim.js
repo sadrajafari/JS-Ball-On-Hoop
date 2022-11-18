@@ -36,7 +36,7 @@ function updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval
       let ynew = [angle,velocity];
       let graphVals = [];
 
-    for (i = 0; i <= graphLen*100; i++){
+    while(t<graphLen){
         graphVals.push([t,ynew[0],ynew[1]])
         //console.log([t,y[0],y[1]]);
         ynew = rk4(y,N,t,h,ynew,omega, radius,g,k, equations, useEval);
@@ -163,12 +163,12 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   const geometryHoop = new THREE.TorusGeometry(100,tube,radialSegments,tubularSegments, arc);
   const materialHoop = new THREE.MeshBasicMaterial({color: 0x44aa88}); 
   const geometryHoop2 = new THREE.TorusGeometry(100,tube*1.05,radialSegments,tubularSegments, arc/2);
-  const materialHoop2 = new THREE.MeshBasicMaterial({color: 0x0000FF}); 
+  //const materialHoop2 = new THREE.MeshBasicMaterial({color: 0x0000FF}); 
   const hoop = new THREE.Mesh(geometryHoop, materialHoop);
-  const hoop2 = new THREE.Mesh(geometryHoop2, materialHoop2);
-  hoop2.rotation.z = 6.28/4;
+  //const hoop2 = new THREE.Mesh(geometryHoop2, materialHoop2);
+  //hoop2.rotation.z = 6.28/4;
   scene.add(hoop);
-  scene.add(hoop2);
+  //scene.add(hoop2);
   const geometryCenter = new THREE.SphereGeometry( 2, 32, 16 );
   const materialCenter = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   const center = new THREE.Mesh( geometryCenter, materialCenter );
@@ -229,7 +229,7 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     }
     velocity = data[1];
     hoop.rotation.y += omega*dt;
-    hoop2.rotation.y = hoop.rotation.y;
+    //hoop2.rotation.y = hoop.rotation.y;
     let cords = getBallPos(angle+3*Math.PI/2, 100);
     let xyz = {x:cords[0]*Math.cos(hoop.rotation.y), y: cords[1], z: -cords[0]*Math.sin(hoop.rotation.y)};
     ball.position.set(xyz.x,xyz.y,xyz.z);
@@ -332,10 +332,6 @@ function drawTheta(globalData,graphLen,divID){
       .style("text-anchor", "middle")
       .style("font-size", "20px")
       .text("Theta over Time: Inputed Equation")
-          if (globalData[globalData.length-1][0] > graphLen){
-            return false;
-          }
-        return true;
   }
   
   
@@ -403,9 +399,4 @@ function drawTheta(globalData,graphLen,divID){
       .style("text-anchor", "middle")
       .style("font-size", "20px")
       .text("Velocity over Time: Inputed Equation")
-  
-          if (globalData[globalData.length-1][0] > graphLen){
-            return false;
-          }
-        return true;
   }
