@@ -8,7 +8,7 @@
     <style>
         .canvas-form{
             display: flex;
-            justify-content: space-between;
+            justify-content: left;
         }
         .time-label{
             text-align: center;
@@ -21,24 +21,31 @@
             justify-content: space-between;
             
         }
-        .graphs{
+        
+        .actual{
             display: flex;
-            justify-content: space-between;
+            justify-content: left;
+        }
+        .inputed{
+            display: flex;
+            justify-content: left;
         }
     </style>
 </head>
 
 <body>
-    <h1>Hoop Generator</h1>>
-    <div class="labels">
-        <p>Variables:</p>
-        <p>Your Equations:</p>
-        <p></p>
-        <p>Actual Equation:</p>
-    </div>
+    <h1>Bead on Hoop</h1>>
+    
     <div class = "canvas-form">
-        
+            <div class = "canvas-container">
+                <p>Actual Equations:</p>
+        <canvas class = "canvas2" id="c2" width = "350" height="350"></canvas>
+               <p>Your Equations:</p> 
+        <canvas class = "canvas1" id="c" width = "350" height="350"></canvas>
+                
+            </div>
     <form class = "variables">
+        <p>Variables:</p>
         <label for="radius">radius:</label><br>
         <input type="text" id="radius" name="radius" value=".1" onBlur ="refresh()"><br>
 
@@ -71,18 +78,29 @@
 
         <input type="checkbox" id="projection" name="projection" value="false" onBlur ="refresh()">
         <label for="projection"> Project trail on hoop?</label><br>
-    </form>
-
-
-    <canvas class = "canvas1" id="c" width = "500" height="500"></canvas>
-    <canvas class = "canvas2" id="c2" width = "500" height="500"></canvas>
-    </div>
-
-    <p class="time-label">Time(seconds):</p>
-    <p class = "time-value" id="time">0</p>
-    <p id = "equations-label">Leave Empty for default equations, (use o for ω, use t for θ):</p>
+        <p class="time-label">Time(seconds):</p>
+        <p class = "time-value" id="time">0</p>
+        <p id = "equations-label">Leave Empty for default equations, (use o for ω, use t for θ):</p>
     <p id = "thetadot" >θ&#x307 = <span id="math-field"></span></p>
     <p id ="velocitydot">v&#x307 = <span id="math-field2"></span></p>
+    <p id = "error-output">[BAD OR NO EQUATION INPUTED, PLEASE FIX]</p>
+    </form>
+        <div class="graphs">
+            <div class = "inputed">
+        <div id="variableSim-theta"></div>
+        <div id="variableSim-velocity"></div>
+            </div>
+            <div class="actual">
+        <div id="staticSim-theta"></div>
+        <div id="staticSim-velocity"></div>
+            </div>
+    </div>
+
+    
+    </div>
+
+    
+    
     
 
     <link href = "./libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
@@ -97,12 +115,7 @@
         }
     }</script>
     <button id="generate" type="button">Generate</button>
-    <div class="graphs">
-    <div id="variableSim-theta"></div>
-    <div id="variableSim-velocity"></div>
-    <div id="staticSim-theta"></div>
-    <div id="staticSim-velocity"></div>
-    </div>
+    
     
     <script type = "module">
        
@@ -116,7 +129,7 @@
         handlers: {
             edit: function() { // useful event handlers
             latexSpan = mathField.latex(); // simple API
-            //refresh();
+            refreshEval();
             }
         }
         });
@@ -128,7 +141,7 @@
         handlers: {
             edit: function() { // useful event handlers
             latexSpan2 = mathField2.latex(); // simple API
-            //refresh();
+            refreshEval();
             }
             
         }
@@ -138,7 +151,7 @@
         // import {draw2} from './src/staticSim.js';
 
         import {draw} from "./src/runSim.js";
-
+        import {verifyEq} from "./src/verifyEq.js";
 
         document.getElementById("generate").addEventListener("click", () => {
             document.getElementById("time").innerHTML=0;
@@ -152,7 +165,7 @@
         })
         window.refresh = function refreshDraw(){
             document.getElementById("time").innerHTML=0;
-            document.getElementById("equations-label").innerHTML="Type equations below:, (use o for ω, use t for θ):";
+            document.getElementById("error-output").innerHTML="";
             document.getElementById("variableSim-theta").innerHTML="";
             document.getElementById("variableSim-velocity").innerHTML="";
             document.getElementById("staticSim-theta").innerHTML="";
@@ -161,6 +174,15 @@
             draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},false, "staticSim-theta","staticSim-velocity",window.evaluatex);
         }
         
+        window.refreshEval = function refreshEval(){
+            let thetaTest = verifyEq(mathField.latex());
+            let velocityTest = verifyEq(mathField2.latex());
+            //console.log(thetaTest,velocityTest);
+            if(thetaTest[0] && velocityTest[0] == true){
+                refresh();
+            }
+
+        }
                 
 
     </script>

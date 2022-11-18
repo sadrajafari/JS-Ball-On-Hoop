@@ -55,7 +55,7 @@ function updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval
       dydt[0]= thetadot({v:y[1],t:y[0]});
       } catch (err){
         //console.log(err);
-        document.getElementById("equations-label").innerHTML="Type equations below:, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
+        document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED, PLEASE FIX]";
       }
     
   
@@ -63,7 +63,7 @@ function updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval
       const velocitydot = window.evaluatex(equations.velocitydot, {k:k,r:r,g:g,o:omega}, {latex:true});
       dydt[1]= velocitydot({v:y[1],t:y[0]});
     } catch(err){
-      document.getElementById("equations-label").innerHTML="Type equations below:, (use o for ω, use t for θ): [BAD OR NO EQUATION INPUTED, PLEASE FIX]";
+      document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED, PLEASE FIX]";
     }
     
   
@@ -199,9 +199,14 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let graphLen = Number(document.getElementById("graphlen").value);
   let project = document.getElementById("projection").checked;
   let graphData = getGraphData(graphUpdateInterval, velocity, angle, omega, radius, g, k, equations, useEval, graphLen, window.evaluatex);
-  drawTheta(graphData, graphLen, thetaDivId);
-  drawVelocity(graphData, graphLen, velocityDivId);
+  if (thetaDivId === "variableSim-theta"){
+  drawTheta(graphData, graphLen, thetaDivId, "inputed");
+  drawVelocity(graphData, graphLen, velocityDivId, "inputed");
+} else{
+  drawTheta(graphData, graphLen, thetaDivId, "actual");
+  drawVelocity(graphData, graphLen, velocityDivId, "actual");
 
+}
 
   let timer = 0;
   let lastTime = 0;
@@ -269,11 +274,11 @@ function getBallPos(angle,radius){
 return [x,y];
 }
 
-function drawTheta(globalData,graphLen,divID){
+function drawTheta(globalData,graphLen,divID,type){
   
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+      width = 300 - margin.left - margin.right,
+      height = 300 - margin.top - margin.bottom;
   
   // append the svg object to the body of the page
   const svg = d3.select(`#${divID}`)
@@ -318,7 +323,7 @@ function drawTheta(globalData,graphLen,divID){
       .attr("x", -(height/2))
       .attr("y", -30)
       .style("text-anchor", "middle")
-      .style("font-size", "30px")
+      .style("font-size", "20px")
       .text("θ")
   
       svg.append("text")
@@ -327,19 +332,19 @@ function drawTheta(globalData,graphLen,divID){
       .text("Time (s)")
   
       svg.append("text")
-      .attr("x", (height/2))
+      .attr("x", (height/2.5))
       .attr("y", 20)
       .style("text-anchor", "middle")
-      .style("font-size", "20px")
-      .text("Theta over Time: Inputed Equation")
+      .style("font-size", "15px")
+      .text(`Theta over Time: ${type} eqn`)
   }
   
   
-  export function drawVelocity(globalData,graphLen,divID){
+  export function drawVelocity(globalData,graphLen,divID,type){
     
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+      width = 300 - margin.left - margin.right,
+      height = 300 - margin.top - margin.bottom;
   
   // append the svg object to the body of the page
   const svg = d3.select(`#${divID}`)
@@ -385,7 +390,7 @@ function drawTheta(globalData,graphLen,divID){
       .attr("x", -(height/2))
       .attr("y", -30)
       .style("text-anchor", "middle")
-      .style("font-size", "30px")
+      .style("font-size", "19px")
       .text("Velocity")
   
       svg.append("text")
@@ -394,9 +399,9 @@ function drawTheta(globalData,graphLen,divID){
       .text("Time (s)")
   
       svg.append("text")
-      .attr("x", (height/2))
+      .attr("x", (height/2.5))
       .attr("y", 20)
       .style("text-anchor", "middle")
-      .style("font-size", "20px")
-      .text("Velocity over Time: Inputed Equation")
+      .style("font-size", "15px")
+      .text(`Velocity over Time: ${type} eqn`)
   }
