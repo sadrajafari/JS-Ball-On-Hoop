@@ -42,6 +42,11 @@ function updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval
         ynew = rk4(y,N,t,h,ynew,omega, radius,g,k, equations, useEval);
         y[0] = ynew[0];
         y[1] = ynew[1];
+      y[0] = y[0]%(2*Math.PI);
+    if (y[0] < 0){
+      y[0] = 2*Math.PI - Math.abs(y[0])
+    }
+    //console.log(y[0]);
         t = t + h;
         //console.log(ynew);
         
@@ -67,7 +72,10 @@ function updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval
     }
     
   
-    
+    // dydt[0] = dydt[0]%(2*Math.PI);
+    // if (dydt[0] < 0){
+    //   dydt[0] = 2*Math.PI - Math.abs(dydt[0])
+    // }
       return dydt;
   }
 
@@ -75,6 +83,13 @@ function updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval
     //console.log(`${y} - ${dydt} - ${omega} - ${r} - ${g} - ${k}`);
       dydt[0] = y[1]/r;
       dydt[1] = r*Math.sin(y[0])*(Math.pow(omega, 2)*Math.cos(y[0])-g/r)-k*y[1];
+
+      // console.log(dydt[0]);
+    //   dydt[0] = dydt[0]%(2*Math.PI);
+    // if (dydt[0] < 0){
+    //   dydt[0] = 2*Math.PI - Math.abs(dydt[0])
+    // }
+    // console.log(dydt[0]);
       return dydt;
   }
   
