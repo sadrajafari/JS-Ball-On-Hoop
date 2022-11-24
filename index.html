@@ -67,8 +67,8 @@
         <label for="simspeed">simulation speed:</label><br>
         <input type="text" id="simSpeed" name="simspeed" value=".3" onBlur ="refresh()"><br>
 
-        <label for="graphint">Graph update interval (use .005 for more precise graphs, but will load slower):</label><br>
-        <input type="text" id="graphint" name="graphint" value=".05" onBlur ="refresh()"><br>
+        <label for="graphint">Graph update interval (smaller for more precise graphs, but will load slower):</label><br>
+        <input type="text" id="graphint" name="graphint" value=".005" onBlur ="refresh()"><br>
 
         <label for="graphlen">Graph record length (s):</label><br>
         <input type="text" id="graphlen" name="graphlen" value="5" onBlur ="refresh()"><br>
@@ -78,12 +78,13 @@
 
         <input type="checkbox" id="projection" name="projection" value="false" onBlur ="refresh()">
         <label for="projection"> Project trail on hoop?</label><br>
+        
         <p class="time-label">Time(seconds):</p>
         <p class = "time-value" id="time">0</p>
         <p id = "equations-label">Leave Empty for default equations, (use o for ω, use t for θ):</p>
-    <p id = "thetadot" >θ&#x307 = <span id="math-field"></span></p>
-    <p id ="velocitydot">v&#x307 = <span id="math-field2"></span></p>
-    <p id = "error-output">[BAD OR NO EQUATION INPUTED, PLEASE FIX]</p>
+        <p id = "thetadot" >θ&#x307 = <span id="math-field"></span></p>
+        <p id ="velocitydot">v&#x307 = <span id="math-field2"></span></p>
+        <p id = "error-output">[BAD OR NO EQUATION INPUTED, PLEASE FIX]</p>
     </form>
         <div class="graphs">
             <div class="actual">
