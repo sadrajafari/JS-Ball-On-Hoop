@@ -16,6 +16,5 @@ export function verifyEq(equation){
         return [false,equation];
     }
     return [true, equation];
-
 }
 
