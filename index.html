@@ -5,37 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        .canvas-form{
-            display: flex;
-            justify-content: left;
-        }
-        .time-label{
-            text-align: center;
-        }
-        .time-value{
-            text-align: center;
-        }
-        .labels{
-            display: flex;
-            justify-content: space-between;
-            
-        }
-        
-        .actual{
-            display: flex;
-            justify-content: left;
-        }
-        .inputed{
-            display: flex;
-            justify-content: left;
-        }
-    </style>
+    <link rel="stylesheet" href="pagecss.css">
 </head>
 
 <body>
     <h1>Bead on Hoop</h1>>
-    
     <div class = "canvas-form">
             <div class = "canvas-container">
                 <p>Actual Equations:</p>
@@ -46,39 +20,7 @@
             </div>
     <form class = "variables">
         <p>Variables:</p>
-        <label for="radius">radius:</label><br>
-        <input type="text" id="radius" name="radius" value=".1" onBlur ="refresh()"><br>
-
-        <label for="gravity">gravity:</label><br>
-        <input type="text" id="gravity" name="gravity" value="9.8" onBlur ="refresh()"><br>
-
-        <label for="friction">k:</label><br>
-        <input type="text" id="friction" name="friction" value="5.0" onBlur ="refresh()"><br>
-
-        <label for="theta">θ:</label><br>
-        <input type="text" id="theta" name="theta" value="30" onBlur ="refresh()"><br>
-
-        <label for="velocity">v:</label><br>
-        <input type="text" id="velocity" name="velocity" value="0.6" onBlur ="refresh()"><br>
-
-        <label for="omega">ω:</label><br>
-        <input type="text" id="omega" name="omega" value="11" onBlur ="refresh()"><br>
-
-        <label for="simspeed">simulation speed:</label><br>
-        <input type="text" id="simSpeed" name="simspeed" value=".3" onBlur ="refresh()"><br>
-
-        <label for="graphint">Graph update interval (smaller for more precise graphs, but will load slower):</label><br>
-        <input type="text" id="graphint" name="graphint" value=".005" onBlur ="refresh()"><br>
-
-        <label for="graphlen">Graph record length (s):</label><br>
-        <input type="text" id="graphlen" name="graphlen" value="5" onBlur ="refresh()"><br>
-
-        <label for="trailLen">trail length:</label><br>
-        <input type="trailLen" id="trailLen" name="trailLen" value="20" onBlur ="refresh()"><br>
-
-        <input type="checkbox" id="projection" name="projection" value="false" onBlur ="refresh()">
-        <label for="projection"> Project trail on hoop?</label><br>
-        
+        <div id ="vars"></div>
         <p class="time-label">Time(seconds):</p>
         <p class = "time-value" id="time">0</p>
         <p id = "equations-label">Leave Empty for default equations, (use o for ω, use t for θ):</p>
@@ -86,6 +28,7 @@
         <p id ="velocitydot">v&#x307 = <span id="math-field2"></span></p>
         <p id = "error-output">[BAD OR NO EQUATION INPUTED, PLEASE FIX]</p>
     </form>
+        
         <div class="graphs">
             <div class="actual">
                 <div id="staticSim-theta"></div>
@@ -98,16 +41,15 @@
             
     </div>
     </div>
-
     
-    
-    
-
     <link href = "./libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
-<script src="./libraries/jquery/dist/jquery.min.js"></script>
-<script src="./libraries/mathquill-0.10.1/mathquill.js"></script>
-<script src="./src/bundle2.js">
-</script>
+    <script src="./libraries/jquery/dist/jquery.min.js"></script>
+    <script src="./libraries/mathquill-0.10.1/mathquill.js"></script>
+    <script src="./src/bundle2.js"></script>
+    <script src="./src/makeTable.js"></script>
+    
+
+
     <script  type="importmap">{
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
