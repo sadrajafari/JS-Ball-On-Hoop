@@ -1,0 +1,24 @@
+.canvas-form{
+    display: flex;
+    justify-content: left;
+}
+.time-label{
+    text-align: center;
+}
+.time-value{
+    text-align: center;
+}
+.labels{
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.actual{
+    display: flex;
+    justify-content: left;
+}
+.inputed{
+    display: flex;
+    justify-content: left;
+}
