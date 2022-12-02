@@ -73,7 +73,20 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   const materialBall = new THREE.MeshBasicMaterial( { color: 0xff0000} );
   const ball = new THREE.Mesh( geometryBall, materialBall );
   scene.add( ball );
-
+  const lineMaterial = new THREE.LineBasicMaterial({color: "red", linewidth: 3});
+  const points = [];
+  points.push( new THREE.Vector3( 0, 120, 0 ) );
+  points.push( new THREE.Vector3( 0, 0, 0 ) );
+  points.push( new THREE.Vector3( 0, -120, 0 ) );
+  var tubeGeometry = new THREE.TubeGeometry(
+    new THREE.CatmullRomCurve3(points),
+    512,
+    1,
+    8, 
+    false 
+  );
+  const line = new THREE.Line( tubeGeometry, lineMaterial );
+  scene.add(line);
 
 
 
