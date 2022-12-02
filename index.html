@@ -41,7 +41,7 @@
             
     </div>
     </div>
-    
+
     <link href = "./libraries/mathquill-0.10.1/mathquill-basic.css" rel = "stylesheet">
     <script src="./libraries/jquery/dist/jquery.min.js"></script>
     <script src="./libraries/mathquill-0.10.1/mathquill.js"></script>
@@ -92,7 +92,7 @@
         // import{draw} from './src/index.js';
         // import {draw2} from './src/staticSim.js';
 
-        import {draw} from "./src/runSim.js";
+        import {draw, nextFrameVariable} from "./src/runSim.js";
         import {verifyEq} from "./src/verifyEq.js";
 
         document.getElementById("generate").addEventListener("click", () => {
@@ -122,6 +122,8 @@
             //console.log(thetaTest,velocityTest);
             if(thetaTest[0] && velocityTest[0] == true){
                 refresh();
+            } else {
+                cancelAnimationFrame(nextFrameVariable);
             }
 
         }

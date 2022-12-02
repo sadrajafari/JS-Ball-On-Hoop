@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 
 
-export function drawTheta(globalData,graphLen,divID,type){
+export function drawTheta(globalData,graphLen,divID,type, ballCords){
   
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
       width = 300 - margin.left - margin.right,
@@ -45,6 +45,12 @@ export function drawTheta(globalData,graphLen,divID,type){
           .x(function(d) { return x(d[0]) })
           .y(function(d) { return y(d[1]) })
           )
+      svg.selectAll("dot")
+      .data(ballCords)
+      .enter().append("circle")
+        .attr("r", 3.5)
+        .attr("cx", function(d) { return x(d[0])})
+        .attr("cy", function(d) { return y(d[1])})
       svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -(height/2))
@@ -64,10 +70,12 @@ export function drawTheta(globalData,graphLen,divID,type){
       .style("text-anchor", "middle")
       .style("font-size", "15px")
       .text(`Theta over Time: ${type} eqn`)
+
+      return svg;
   }
   
   
-  export function drawVelocity(globalData,graphLen,divID,type){
+  export function drawVelocity(globalData,graphLen,divID,type, ballCords){
     
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
       width = 300 - margin.left - margin.right,
@@ -131,4 +139,6 @@ export function drawTheta(globalData,graphLen,divID,type){
       .style("text-anchor", "middle")
       .style("font-size", "15px")
       .text(`Velocity over Time: ${type} eqn`)
+
+      return svg;
   }

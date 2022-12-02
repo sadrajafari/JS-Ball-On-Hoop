@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import {drawTheta, drawVelocity} from "./makeGraphs.js";
 import {updateVals, getGraphData} from "./rk4functions.js";
+import * as d3 from "https://cdn.skypack.dev/d3@7";
 
 export const context = {runloop: false};
 export let nextFrameStatic = null;
@@ -14,6 +15,7 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     //Cancels the previous animation render loop of either the static or variable equation draw
     if (useEval){
         if (nextFrameVariable != null) cancelAnimationFrame(nextFrameVariable);
+        
     } else{
         if (nextFrameStatic != null) cancelAnimationFrame(nextFrameStatic);
         }
@@ -87,25 +89,28 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   prevCords.length = trailLen; prevCords.fill(0);
 
   //let funcID = Math.random(); // use this if need to check to see which function is doing what or if the function isnt correctly being canceled
-  
+  let thetaGraph;
+  let velocityGraph;
 
   //gets data for graph for d3 graphs and then graphs them for the correct simulation
   let graphData = getGraphData(graphUpdateInterval, velocity, angle, omega, radius, g, k, equations, useEval, graphLen);
   if (thetaDivId === "variableSim-theta"){
-  drawTheta(graphData, graphLen, thetaDivId, "inputed");
-  drawVelocity(graphData, graphLen, velocityDivId, "inputed");
+  thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "inputed", [0,0]);
+  velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "inputed", [0,0]);
 } else{
-  drawTheta(graphData, graphLen, thetaDivId, "actual");
-  drawVelocity(graphData, graphLen, velocityDivId, "actual");
+  thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "actual", [0,0]);
+  velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "actual", [0,0]);
 
 }
-
+  
   let timer = 0;
   let lastTime = 0;
   let firstIteration = true;
+  
 
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
+    
     //console.log(funcID);
     if (firstIteration){
       lastTime = time;
@@ -113,7 +118,7 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     }
 
     //hoop rotation, grab new data from rk4, adjust angle to whithin 0-6.28 rads
-    let dt = ((time - lastTime) *simSpeed/ 1000);
+    let dt = ((time - lastTime) * simSpeed/ 1000);
     timer += dt;
     lastTime = time;
     let data = updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval);
@@ -124,6 +129,13 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     }
     velocity = data[1];
     hoop.rotation.y += omega*dt;
+    
+    if(timer < graphLen){
+      let dataIndex = (timer/graphUpdateInterval).toFixed(0);
+      let ballAngle = graphData[dataIndex][1];
+      let ballVelocity = graphData[dataIndex][2];
+      updateBallGraph(timer, ballAngle, ballVelocity, graphLen, thetaGraph, velocityGraph);
+    }
     
 
     //takes care of ball trail, and whether or not its projected on the hoop
@@ -166,8 +178,46 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     }
   
 }
+
 function getBallPos(angle,radius){
   let x = radius*Math.cos(angle);
   let y = radius*Math.sin(angle);
 return [x,y];
+}
+
+function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityGraph){
+  if (!(timer == null) && !(angle == null)) {
+    const x = d3.scaleLinear()
+      .domain([0,graphLen])
+      .range([ 0, 210]);
+
+      const y = d3.scaleLinear()
+      .domain([6.28, 0])
+      .range([ 0, 260 ]);
+
+      const yV = d3.scaleLinear()
+      .domain([10, -10])
+      .range([ 0, 260 ]);
+
+
+    thetaGraph.selectAll("circle").remove();
+    thetaGraph.selectAll("dot")
+      .data([50,50])
+      .enter().append("circle")
+        .attr("r", 3.5)
+        .attr("cx", x(timer))
+        .attr("cy", y(angle))
+        .attr("fill", "red")
+        .attr("stroke", "red")
+
+    velocityGraph.selectAll("circle").remove();
+    velocityGraph.selectAll("dot")
+      .data([50,50])
+      .enter().append("circle")
+        .attr("r", 3.5)
+        .attr("cx", x(timer))
+        .attr("cy", yV(velocity))
+        .attr("fill", "red")
+        .attr("stroke", "red")
+    }
 }
