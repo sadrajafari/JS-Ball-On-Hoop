@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import {drawTheta, drawVelocity} from "./makeGraphs.js";
 import {updateVals, getGraphData} from "./rk4functions.js";
-import * as d3 from "https://cdn.skypack.dev/d3@7";
+import * as d3 from "https://esm.run/d3"; 
 
 export const context = {runloop: false};
 export let nextFrameStatic = null;
