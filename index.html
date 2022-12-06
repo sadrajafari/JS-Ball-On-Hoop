@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="pagecss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
 <body>
     <h1>Bead on Hoop</h1>>
     <div class = "canvas-form">
             <div class = "canvas-container">
-                <p>Actual Equations:</p>
+                <p>Reference Equations:</p>
         <canvas class = "canvas2" id="c2" width = "350" height="350"></canvas>
-               <p>Your Equations:</p> 
+               <p>Test Equations:</p> 
         <canvas class = "canvas1" id="c" width = "350" height="350"></canvas>
                 
             </div>
@@ -47,8 +48,17 @@
     <script src="./libraries/mathquill-0.10.1/mathquill.js"></script>
     <script src="./src/bundle2.js"></script>
     <script src="./src/makeTable.js"></script>
-    
+    <button type="button" 
+    id = "generate" 
+    class="btn btn-outline-light btn-lg"
+    onclick="refresh()"
+    ><i class="fas fa-sync-alt"></i> reset position (r)</button>
 
+    <button type="button" 
+    class="btn btn-outline-light btn-lg"
+    onclick="playPause()"
+    ><i class="fas fa-play"></i> play/pause animation (spacebar)</button>
+    
 
     <script  type="importmap">{
         "imports": {
@@ -56,7 +66,7 @@
             "d3" : "https://d3js.org/d3.v6.js"
         }
     }</script>
-    <button id="generate" type="button">Generate</button>
+    
     
     
     <script type = "module">
@@ -94,18 +104,11 @@
 
         import {draw, nextFrameVariable} from "./src/runSim.js";
         import {verifyEq} from "./src/verifyEq.js";
-
-        document.getElementById("generate").addEventListener("click", () => {
-            document.getElementById("time").innerHTML=0;
-            document.getElementById("variableSim-theta").innerHTML="";
-            document.getElementById("variableSim-velocity").innerHTML="";
-            document.getElementById("staticSim-theta").innerHTML="";
-            document.getElementById("staticSim-velocity").innerHTML="";
-            draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()}, true, "variableSim-theta","variableSim-velocity",window.evaluatex);
-            draw({thetadot:mathField.latex(),velocitydot: mathField2.latex()},false, "staticSim-theta","staticSim-velocity",window.evaluatex);
-            
-        })
+        window.playPause = function(){
+            window.play = !window.play;
+        }
         window.refresh = function refreshDraw(){
+            window.play = true;
             document.getElementById("time").innerHTML=0;
             document.getElementById("error-output").innerHTML="";
             document.getElementById("variableSim-theta").innerHTML="";
@@ -125,9 +128,17 @@
             } else {
                 cancelAnimationFrame(nextFrameVariable);
             }
+        
 
         }
-                
+        document.addEventListener('keyup', function(event) {
+            console.log(event.keyCode);
+            if (event.keyCode === 82) { //if r
+                refresh();
+            } else if(event.keyCode === 32){
+                playPause();
+            }
+        });
 
     </script>
     

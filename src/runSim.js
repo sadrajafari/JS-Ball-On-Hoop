@@ -11,6 +11,7 @@ export let nextFrameVariable = null;
 
 
 export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
+    
 
     //Cancels the previous animation render loop of either the static or variable equation draw
     if (useEval){
@@ -123,6 +124,9 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
 
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
+
+    if (!window.play){
+      
     
     //console.log(funcID);
     if (firstIteration){
@@ -174,6 +178,9 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     
     //update time on page
     document.getElementById("time").innerHTML = timer.toFixed(3);
+  } else {
+    lastTime = time;
+  }
     renderer.render(scene,camera);
 
 

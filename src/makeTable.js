@@ -18,3 +18,6 @@ for (const [key, value] of Object.entries(vars)) {
 }
 html += "</table>";
 t.innerHTML = html;
+document.getElementById("projection").checked = true;
+window.play = true;
+graphs = {thetaInput:{},thetaActual:{},velocityInput:{},velocityActual:{}}
