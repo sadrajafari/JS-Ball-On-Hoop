@@ -52,11 +52,13 @@
     id = "generate" 
     class="btn btn-outline-light btn-lg"
     onclick="refresh()"
+    onfocus="blur()"
     ><i class="fas fa-sync-alt"></i> reset position (r)</button>
 
     <button type="button" 
     class="btn btn-outline-light btn-lg"
     onclick="playPause()"
+    onfocus="blur()"
     ><i class="fas fa-play"></i> play/pause animation (spacebar)</button>
     
 
@@ -132,10 +134,9 @@
 
         }
         document.addEventListener('keyup', function(event) {
-            console.log(event.keyCode);
             if (event.keyCode === 82) { //if r
                 refresh();
-            } else if(event.keyCode === 32){
+            } else if(event.keyCode === 32){// if space
                 playPause();
             }
         });
