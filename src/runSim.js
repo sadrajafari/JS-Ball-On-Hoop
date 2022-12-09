@@ -156,18 +156,18 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     }else if (!timerThreshold){
       graphLen = timer; //append data to graph data here
       graphData.push([timer, angle, velocity])
-      console.log(graphData.length)
       if (thetaDivId === "variableSim-theta"){
         document.getElementById("variableSim-theta").innerHTML = "";
         document.getElementById("variableSim-velocity").innerHTML = "";
-        thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "inputed");
-        velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "inputed");
+        thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "test");
+        velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "test");
       } else{
         document.getElementById("staticSim-theta").innerHTML = "";
         document.getElementById("staticSim-velocity").innerHTML = "";
-        thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "actual");
-        velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "actual");
+        thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "reference");
+        velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "reference");
       }
+      //updateGraphData(graphLen, thetaGraph, velocityGraph, graphData);
       updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityGraph, graphData);
     }
     
@@ -240,7 +240,6 @@ function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityG
       .domain([maxYV, minYV])
       .range([ 0, 260 ]);
 
-
     thetaGraph.selectAll("circle").remove();
     thetaGraph.selectAll("dot")
       .data([50,50])
@@ -262,3 +261,42 @@ function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityG
         .attr("stroke", "red")
     }
 }
+
+// function updateGraphData(graphLen, thetaGraph, velocityGraph, graphData){
+//       const margin = {top: 10, right: 30, bottom: 30, left: 60},
+//       width = 300 - margin.left - margin.right,
+//       height = 300 - margin.top - margin.bottom;
+
+
+//       const minY = d3.min(graphData, (d) => d[2])
+//       const maxY = d3.max(graphData, (d) => d[2])
+//       // Add X axis --> it is a date format
+//       const x = d3.scaleLinear()
+//         .domain([0,graphLen])
+//         .range([ 0, width]);
+//         thetaGraph.selectAll("g").remove();
+//         thetaGraph.append("g")
+//         .attr("transform", `translate(0, ${height})`)
+//         .call(d3.axisBottom(x));
+  
+//       // Add Y axis
+//       const y = d3.scaleLinear()
+//         .domain([minY, maxY])
+//         .range([ height, 0 ]);
+//         thetaGraph.append("g")
+//         .call(d3.axisLeft(y));
+  
+      
+  
+//       // Add the line
+//       thetaGraph
+//         .append("path")
+//         .datum(graphData)
+//         .attr("fill", "none")
+//         .attr("stroke", "steelblue")
+//         .attr("stroke-width", 1.5)
+//         .attr("d", d3.line()
+//           .x(function(d) { return x(d[0]) })
+//           .y(function(d) { return y(d[2]) })
+//           )
+// }
