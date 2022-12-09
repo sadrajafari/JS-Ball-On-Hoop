@@ -1,5 +1,5 @@
 t = document.getElementById("vars");
-vars = {r:{val: ".1", id: "radius", name: "radius", type: "text"},
+vars = {r:{val: ".1", id: "radius", name: "r", type: "text"},
  g:{val: "9.8", id: "gravity", name: "g", type: "text"},
   k:{val: "5.0", id: "friction", name: "k", type: "text"},
    theta:{val: "5.0", id: "theta", name: "θ", type: "text"},
@@ -14,10 +14,13 @@ vars = {r:{val: ".1", id: "radius", name: "radius", type: "text"},
 
 html = "<table>";
 for (const [key, value] of Object.entries(vars)) {
-  html += `<tr><td>${value.name}: </td><td><input type=${value.type} id=${value.id} name=${value.name} value=${value.val} onBlur ="refresh()"></td>`;
+  html += `<tr><td class = 'varCol'>${value.id} (${value.name}): </td><td><input type=${value.type} id=${value.id} name=${value.name} value=${value.val} onBlur ="refresh()"></td>`;
 }
 html += "</table>";
 t.innerHTML = html;
 document.getElementById("projection").checked = true;
 window.play = true;
-graphs = {thetaInput:{},thetaActual:{},velocityInput:{},velocityActual:{}}
+// graphs = {thetaInput:{loc:"variableSim-theta",width:300,height:300,top:10,bottom:30,right:30,left:60,yDataIndex:1,xDomain:[],xRange:[],yDomain,yRange:[],title:"",xLabel:"",yLabel:""},
+// thetaActual:{loc:"staticSim-theta"},//if values such as graphLen are changed, how are they supposed to change the graph? will the graph only be partially made and finished later? 
+// velocityInput:{loc:"variableSim-velocity"},
+// velocityActual:{loc:"staticSim-velocity"}}

@@ -22,3 +22,7 @@
     display: flex;
     justify-content: left;
 }
+.varCol{
+    display: flex;
+    justify-content: right;
+}

@@ -1,7 +1,7 @@
 import * as d3 from "https://esm.run/d3";
 
 
-export function drawTheta(globalData,graphLen,divID,type, ballCords){
+export function drawTheta(globalData,graphLen,divID,type){
   
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
       width = 300 - margin.left - margin.right,
@@ -16,7 +16,8 @@ export function drawTheta(globalData,graphLen,divID,type, ballCords){
       .attr("transform", `translate(${margin.left},${margin.top})`);
   
   //Read the data
-  
+      const minY = d3.min(globalData, (d) => d[1])
+      const maxY = d3.max(globalData, (d) => d[1])
       // Add X axis --> it is a date format
       const x = d3.scaleLinear()
         .domain([0,graphLen])
@@ -27,13 +28,12 @@ export function drawTheta(globalData,graphLen,divID,type, ballCords){
   
       // Add Y axis
       const y = d3.scaleLinear()
-        .domain([0, 6.28])
+        .domain([minY, maxY])
         .range([ height, 0 ]);
       svg.append("g")
         .call(d3.axisLeft(y));
   
       
-  
       // Add the line
       svg
         .append("path")
@@ -45,12 +45,6 @@ export function drawTheta(globalData,graphLen,divID,type, ballCords){
           .x(function(d) { return x(d[0]) })
           .y(function(d) { return y(d[1]) })
           )
-      svg.selectAll("dot")
-      .data(ballCords)
-      .enter().append("circle")
-        .attr("r", 3.5)
-        .attr("cx", function(d) { return x(d[0])})
-        .attr("cy", function(d) { return y(d[1])})
       svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -(height/2))
@@ -75,7 +69,7 @@ export function drawTheta(globalData,graphLen,divID,type, ballCords){
   }
   
   
-  export function drawVelocity(globalData,graphLen,divID,type, ballCords){
+  export function drawVelocity(globalData,graphLen,divID,type){
     
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
       width = 300 - margin.left - margin.right,
@@ -90,7 +84,8 @@ export function drawTheta(globalData,graphLen,divID,type, ballCords){
       .attr("transform", `translate(${margin.left},${margin.top})`);
   
   //Read the data
-  
+      const minY = d3.min(globalData, (d) => d[2])
+      const maxY = d3.max(globalData, (d) => d[2])
       // Add X axis --> it is a date format
       const x = d3.scaleLinear()
         .domain([0,graphLen])
@@ -101,7 +96,7 @@ export function drawTheta(globalData,graphLen,divID,type, ballCords){
   
       // Add Y axis
       const y = d3.scaleLinear()
-        .domain([-10, 10])
+        .domain([minY, maxY])
         .range([ height, 0 ]);
       svg.append("g")
         .call(d3.axisLeft(y));

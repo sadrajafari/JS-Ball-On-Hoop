@@ -12,7 +12,7 @@ export function verifyEq(equation){
       const eq = window.evaluatex(equation, {k:k,r:radius,g:g,o:omega}, {latex:true});
       result = eq({v:velocity,t:angle});
     } catch (err){
-        document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED, PLEASE FIX]";
+        document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED]";
         return [false,equation];
     }
     return [true, equation];

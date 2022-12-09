@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h1>Bead on Hoop</h1>>
+    <h1>Bead on Hoop</h1>
     <div class = "canvas-form">
             <div class = "canvas-container">
                 <p>Reference Equations:</p>
@@ -27,7 +27,7 @@
         <p id = "equations-label">Leave Empty for default equations, (use o for ω, use t for θ):</p>
         <p id = "thetadot" >θ&#x307 = <span id="math-field"></span></p>
         <p id ="velocitydot">v&#x307 = <span id="math-field2"></span></p>
-        <p id = "error-output">[BAD OR NO EQUATION INPUTED, PLEASE FIX]</p>
+        <p id = "error-output">[BAD OR NO EQUATION INPUTED]</p>
     </form>
         
         <div class="graphs">
@@ -109,6 +109,7 @@
         window.playPause = function(){
             window.play = !window.play;
         }
+        window.RunTest = false;
         window.refresh = function refreshDraw(){
             window.play = true;
             document.getElementById("time").innerHTML=0;
@@ -122,13 +123,16 @@
         }
         
         window.refreshEval = function refreshEval(){
+            window.play = true;
             let thetaTest = verifyEq(mathField.latex());
             let velocityTest = verifyEq(mathField2.latex());
             //console.log(thetaTest,velocityTest);
             if(thetaTest[0] && velocityTest[0] == true){
                 refresh();
+                window.RunTest = true;
             } else {
                 cancelAnimationFrame(nextFrameVariable);
+                window.RunTest = false;
             }
         
 

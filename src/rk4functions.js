@@ -11,6 +11,10 @@ export function updateVals(dt, velocity, angle, omega, radius, g, k, equations, 
       ynew = rk4(y,N,t,h,ynew,omega, r,g, k, equations, useEval);
       y[0] = ynew[0];
       y[1] = ynew[1];
+      y[0] = y[0]%(2*Math.PI);
+      if (y[0] < 0){
+        y[0] = 2*Math.PI - Math.abs(y[0])
+      }
       return y;
     }
 
@@ -30,7 +34,7 @@ export function updateVals(dt, velocity, angle, omega, radius, g, k, equations, 
     while(t<graphLen){
         graphVals.push([t,ynew[0],ynew[1]])
         //console.log([t,y[0],y[1]]);
-        ynew = rk4(y,N,t,h,ynew,omega, radius,g,k, equations, useEval);
+        ynew = rk4(y,N,t,h,ynew,omega, r,g,k, equations, useEval);
         y[0] = ynew[0];
         y[1] = ynew[1];
       y[0] = y[0]%(2*Math.PI);
@@ -51,14 +55,14 @@ export function updateVals(dt, velocity, angle, omega, radius, g, k, equations, 
       dydt[0]= thetadot({v:y[1],t:y[0]});
       } catch (err){
         //console.log(err);
-        document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED, PLEASE FIX]";
+        document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED]";
       }
     
     try{
       const velocitydot = globalThis.window.evaluatex(equations.velocitydot, {k:k,r:r,g:g,o:omega}, {latex:true});
       dydt[1]= velocitydot({v:y[1],t:y[0]});
     } catch(err){
-      document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED, PLEASE FIX]";
+      document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED]";
     }
     
   

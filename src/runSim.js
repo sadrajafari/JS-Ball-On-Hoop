@@ -11,7 +11,8 @@ export let nextFrameVariable = null;
 
 
 export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
-    
+    //TODO:
+    //X and Y axis get bigger as x and y go out of bounds
 
     //Cancels the previous animation render loop of either the static or variable equation draw
     if (useEval){
@@ -120,12 +121,12 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let timer = 0;
   let lastTime = 0;
   let firstIteration = true;
-  
+  let timerThreshold = false;
 
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
 
-    if (!window.play){
+    if (window.play && (window.RunTest || !useEval)){
       
     
     //console.log(funcID);
@@ -140,10 +141,10 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     lastTime = time;
     let data = updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval);
     angle = data[0];
-    angle = angle%(2*Math.PI);
-    if (angle < 0){
-      angle = 2*Math.PI - Math.abs(angle)
-    }
+    // angle = angle%(2*Math.PI);
+    // if (angle < 0){
+    //   angle = 2*Math.PI - Math.abs(angle)
+    // }
     velocity = data[1];
     hoop.rotation.y += omega*dt;
     
@@ -151,7 +152,23 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
       let dataIndex = (timer/graphUpdateInterval).toFixed(0);
       let ballAngle = graphData[dataIndex][1];
       let ballVelocity = graphData[dataIndex][2];
-      updateBallGraph(timer, ballAngle, ballVelocity, graphLen, thetaGraph, velocityGraph);
+      updateBallGraph(timer, ballAngle, ballVelocity, graphLen, thetaGraph, velocityGraph, graphData);
+    }else if (!timerThreshold){
+      graphLen = timer; //append data to graph data here
+      graphData.push([timer, angle, velocity])
+      console.log(graphData.length)
+      if (thetaDivId === "variableSim-theta"){
+        document.getElementById("variableSim-theta").innerHTML = "";
+        document.getElementById("variableSim-velocity").innerHTML = "";
+        thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "inputed");
+        velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "inputed");
+      } else{
+        document.getElementById("staticSim-theta").innerHTML = "";
+        document.getElementById("staticSim-velocity").innerHTML = "";
+        thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "actual");
+        velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "actual");
+      }
+      updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityGraph, graphData);
     }
     
 
@@ -205,18 +222,22 @@ function getBallPos(angle,radius){
 return [x,y];
 }
 
-function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityGraph){
+function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityGraph, graphData){
   if (!(timer == null) && !(angle == null)) {
     const x = d3.scaleLinear()
       .domain([0,graphLen])
       .range([ 0, 210]);
 
+      const minYT = d3.min(graphData, (d) => d[1])
+      const maxYT = d3.max(graphData, (d) => d[1])
+      const minYV = d3.min(graphData, (d) => d[2])
+      const maxYV = d3.max(graphData, (d) => d[2])
       const y = d3.scaleLinear()
-      .domain([6.28, 0])
+      .domain([maxYT, minYT])
       .range([ 0, 260 ]);
 
       const yV = d3.scaleLinear()
-      .domain([10, -10])
+      .domain([maxYV, minYV])
       .range([ 0, 260 ]);
 
 
