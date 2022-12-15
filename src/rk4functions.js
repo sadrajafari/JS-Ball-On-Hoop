@@ -1,3 +1,5 @@
+import { simData } from './simData.js';
+
 export function updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval){
     //console.log(omega)
       const N = 2;
@@ -29,10 +31,10 @@ export function updateVals(dt, velocity, angle, omega, radius, g, k, equations, 
       let t = 0.0;
       let y = [angle,velocity];
       let ynew = [angle,velocity];
-      let graphVals = [];
+      let graphVals = new simData(dt);
 
     while(t<graphLen){
-        graphVals.push([t,ynew[0],ynew[1]])
+        graphVals.insert(t,ynew[0],ynew[1]);
         //console.log([t,y[0],y[1]]);
         ynew = rk4(y,N,t,h,ynew,omega, r,g,k, equations, useEval);
         y[0] = ynew[0];

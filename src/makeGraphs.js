@@ -16,8 +16,8 @@ export function drawTheta(globalData,graphLen,divID,type){
       .attr("transform", `translate(${margin.left},${margin.top})`);
   
   //Read the data
-      const minY = d3.min(globalData, (d) => d[1])
-      const maxY = d3.max(globalData, (d) => d[1])
+      const minY = d3.min(globalData.data, (d) => d.theta)
+      const maxY = d3.max(globalData.data, (d) => d.theta)
       // Add X axis --> it is a date format
       const x = d3.scaleLinear()
         .domain([0,graphLen])
@@ -37,13 +37,13 @@ export function drawTheta(globalData,graphLen,divID,type){
       // Add the line
       svg
         .append("path")
-        .datum(globalData)
+        .datum(globalData.data)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-          .x(function(d) { return x(d[0]) })
-          .y(function(d) { return y(d[1]) })
+          .x(function(d) { return x(d.time) })
+          .y(function(d) { return y(d.theta) })
           )
       svg.append("text")
       .attr("transform", "rotate(-90)")
@@ -84,8 +84,8 @@ export function drawTheta(globalData,graphLen,divID,type){
       .attr("transform", `translate(${margin.left},${margin.top})`);
   
   //Read the data
-      const minY = d3.min(globalData, (d) => d[2])
-      const maxY = d3.max(globalData, (d) => d[2])
+  const minY = d3.min(globalData.data, (d) => d.velocity)
+  const maxY = d3.max(globalData.data, (d) => d.velocity)
       // Add X axis --> it is a date format
       const x = d3.scaleLinear()
         .domain([0,graphLen])
@@ -106,13 +106,13 @@ export function drawTheta(globalData,graphLen,divID,type){
       // Add the line
       svg
         .append("path")
-        .datum(globalData)
+        .datum(globalData.data)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-          .x(function(d) { return x(d[0]) })
-          .y(function(d) { return y(d[2]) })
+          .x(function(d) { return x(d.time) })
+          .y(function(d) { return y(d.velocity) })
           )
   
           svg.append("text")

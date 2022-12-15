@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {drawTheta, drawVelocity} from "./makeGraphs.js";
 import {updateVals, getGraphData} from "./rk4functions.js";
 import * as d3 from "https://esm.run/d3"; 
-
+import { simData } from './simData.js';
 export const context = {runloop: false};
 export let nextFrameStatic = null;
 export let nextFrameVariable = null;
@@ -12,7 +12,7 @@ export let nextFrameVariable = null;
 
 export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     //TODO:
-    //X and Y axis get bigger as x and y go out of bounds
+    //Dont calc rk4 in animation frame, make data class with the data points, plot on hoop based on pregenerated data, generate the next X seconds when graph is done, etc etc
 
     //Cancels the previous animation render loop of either the static or variable equation draw
     if (useEval){
@@ -149,13 +149,12 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     hoop.rotation.y += omega*dt;
     
     if(timer < graphLen){
-      let dataIndex = (timer/graphUpdateInterval).toFixed(0);
-      let ballAngle = graphData[dataIndex][1];
-      let ballVelocity = graphData[dataIndex][2];
+      let ballAngle = graphData.getTheta(timer);
+      let ballVelocity = graphData.getVelocity(timer);
       updateBallGraph(timer, ballAngle, ballVelocity, graphLen, thetaGraph, velocityGraph, graphData);
-    }else if (!timerThreshold){
+    } else if (!timerThreshold){
       graphLen = timer; //append data to graph data here
-      graphData.push([timer, angle, velocity])
+      graphData.insert(timer, angle, velocity)
       if (thetaDivId === "variableSim-theta"){
         document.getElementById("variableSim-theta").innerHTML = "";
         document.getElementById("variableSim-velocity").innerHTML = "";
@@ -228,10 +227,10 @@ function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityG
       .domain([0,graphLen])
       .range([ 0, 210]);
 
-      const minYT = d3.min(graphData, (d) => d[1])
-      const maxYT = d3.max(graphData, (d) => d[1])
-      const minYV = d3.min(graphData, (d) => d[2])
-      const maxYV = d3.max(graphData, (d) => d[2])
+      const minYT = d3.min(graphData.data, (d) => d.theta)
+      const maxYT = d3.max(graphData.data, (d) => d.theta)
+      const minYV = d3.min(graphData.data, (d) => d.velocity)
+      const maxYV = d3.max(graphData.data, (d) => d.velocity)
       const y = d3.scaleLinear()
       .domain([maxYT, minYT])
       .range([ 0, 260 ]);
