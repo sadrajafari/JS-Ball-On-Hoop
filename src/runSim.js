@@ -16,7 +16,10 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
 
     //Cancels the previous animation render loop of either the static or variable equation draw
     if (useEval){
-        if (nextFrameVariable != null) cancelAnimationFrame(nextFrameVariable);
+      
+        if (nextFrameVariable != null) {
+          console.log("true")
+          cancelAnimationFrame(nextFrameVariable)};
         
     } else{
         if (nextFrameStatic != null) cancelAnimationFrame(nextFrameStatic);
@@ -57,8 +60,10 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let simSpeed = Number(document.getElementById("simSpeed").value);
   let graphUpdateInterval = Number(document.getElementById("graphint").value);
   let graphLen = Number(document.getElementById("graphlen").value);
+  let originalLen = graphLen;
   const trailLen = Number(document.getElementById("trailLen").value);
   let project = document.getElementById("projection").checked;
+  let wrap = document.getElementById("wrap").checked;
 
 
 
@@ -108,14 +113,14 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let velocityGraph;
 
   //gets data for graph for d3 graphs and then graphs them for the correct simulation
-  let graphData = getGraphData(graphUpdateInterval, velocity, angle, omega, radius, g, k, equations, useEval, graphLen);
+  let graphData = new simData(graphUpdateInterval);
+  graphData = getGraphData(graphUpdateInterval, velocity, angle, omega, radius, g, k, equations, useEval, graphLen, graphData, 0, wrap);
   if (thetaDivId === "variableSim-theta"){
   thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "inputed", [0,0]);
   velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "inputed", [0,0]);
 } else{
   thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "actual", [0,0]);
   velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "actual", [0,0]);
-
 }
   
   let timer = 0;
@@ -128,33 +133,35 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
 
     if (window.play && (window.RunTest || !useEval)){
       
-    
-    //console.log(funcID);
+      //console.log(funcID);
+    let dt = ((time - lastTime) * simSpeed/ 1000);
     if (firstIteration){
       lastTime = time;
       firstIteration = false;
+      dt = 0;
     }
 
     //hoop rotation, grab new data from rk4, adjust angle to whithin 0-6.28 rads
-    let dt = ((time - lastTime) * simSpeed/ 1000);
+    
     timer += dt;
     lastTime = time;
-    let data = updateVals(dt, velocity, angle, omega, radius, g, k, equations, useEval);
-    angle = data[0];
+    angle = graphData.getTheta(timer);
+    velocity = graphData.getVelocity(timer);
+
     // angle = angle%(2*Math.PI);
     // if (angle < 0){
     //   angle = 2*Math.PI - Math.abs(angle)
     // }
-    velocity = data[1];
-    hoop.rotation.y += omega*dt;
     
+    hoop.rotation.y += omega*dt;
     if(timer < graphLen){
       let ballAngle = graphData.getTheta(timer);
       let ballVelocity = graphData.getVelocity(timer);
       updateBallGraph(timer, ballAngle, ballVelocity, graphLen, thetaGraph, velocityGraph, graphData);
-    } else if (!timerThreshold){
-      graphLen = timer; //append data to graph data here
-      graphData.insert(timer, angle, velocity)
+    } else {
+      graphLen = graphLen + originalLen; 
+      getGraphData(graphUpdateInterval, velocity, angle, omega, radius, g, k, equations, useEval, graphLen, graphData, timer, wrap);
+      //console.log(graphData.data.length);
       if (thetaDivId === "variableSim-theta"){
         document.getElementById("variableSim-theta").innerHTML = "";
         document.getElementById("variableSim-velocity").innerHTML = "";
@@ -170,6 +177,7 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
       updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityGraph, graphData);
     }
     
+ 
 
     //takes care of ball trail, and whether or not its projected on the hoop
     if (project){
@@ -196,7 +204,9 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     document.getElementById("time").innerHTML = timer.toFixed(3);
   } else {
     lastTime = time;
+
   }
+    
     renderer.render(scene,camera);
 
 

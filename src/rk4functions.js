@@ -21,28 +21,35 @@ export function updateVals(dt, velocity, angle, omega, radius, g, k, equations, 
     }
 
 
- export function getGraphData(dt, velocity, angle, omega, radius, g, k, equations, useEval, graphLen){
+ export function getGraphData(dt, velocity, angle, omega, radius, g, k, equations, useEval, graphLen, graphVals, time, wrap){
     
     const N = 2;
       let r = radius;
       let i;
       let j;
       let h = dt; 
-      let t = 0.0;
+      let t = time;
       let y = [angle,velocity];
       let ynew = [angle,velocity];
-      let graphVals = new simData(dt);
-
+      // let graphVals = new simData(dt);
+    //console.log(t + "<" + graphLen)
     while(t<graphLen){
         graphVals.insert(t,ynew[0],ynew[1]);
+        //console.log(graphVals.data.length + "" + t + "<" + graphLen)
+        
         //console.log([t,y[0],y[1]]);
         ynew = rk4(y,N,t,h,ynew,omega, r,g,k, equations, useEval);
         y[0] = ynew[0];
         y[1] = ynew[1];
-      y[0] = y[0]%(2*Math.PI);
-    if (y[0] < 0){
-      y[0] = 2*Math.PI - Math.abs(y[0])
-    }
+
+        if (wrap){
+          y[0] = y[0]%(2*Math.PI);
+          if (y[0] < 0){
+            y[0] = 2*Math.PI - Math.abs(y[0])
+          }
+        }
+        
+
     //console.log(y[0]);
         t = t + h;
         //console.log(ynew);
