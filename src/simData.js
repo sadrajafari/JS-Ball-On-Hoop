@@ -18,7 +18,6 @@ export class simData {
                 break;
             }
         }
-        
         return this.data[dataIndex].theta;
     }
 
@@ -33,7 +32,7 @@ export class simData {
         }
         return this.data[dataIndex].velocity;
     }
-
+// 
     
 }
 
