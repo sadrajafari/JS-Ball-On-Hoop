@@ -12,7 +12,7 @@ export let nextFrameVariable = null;
 
 export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     //TODO:
-    //Dont calc rk4 in animation frame, make data class with the data points, plot on hoop based on pregenerated data, generate the next X seconds when graph is done, etc etc
+    //Antiaialasing or make the hoop crisp, add diffuse lighting so hoop and center rod look cylyndrical, make graph names be above graphs
 
     //Cancels the previous animation render loop of either the static or variable equation draw
     if (useEval){
@@ -35,7 +35,7 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
 
 
   //create camera and renderer
-  const renderer = new THREE.WebGLRenderer({canvas});
+  const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
   renderer.setClearColor( 0xffffff, 0);
   const viewSize = canvas.clientWidth;
   const aspectRatio = canvas.clientWidth/canvas.clientHeight;
@@ -50,7 +50,7 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let radius = Number(document.getElementById("radius").value);
   let tube = 3;
   let radialSegments = 16; 
-  let tubularSegments = 81;
+  let tubularSegments = 50;
   let arc = 2*Math.PI;
   let omega = Number(document.getElementById("omega").value);
   let g = Number(document.getElementById("gravity").value);
@@ -66,21 +66,26 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let wrap = document.getElementById("wrap").checked;
 
 
-
+  const lightFront = new THREE.PointLight( 0xffffff, 2, 0 );
+  lightFront.position.set( 0, 0, 10000 );
+  scene.add( lightFront );
+  // const lightBack = new THREE.PointLight( 0xffffff, 5, 0 );
+  // lightBack.position.set( 0, 0, -10000 );
+  // scene.add( lightBack );
   const geometryHoop = new THREE.TorusGeometry(100,tube,radialSegments,tubularSegments, arc);
-  const materialHoop = new THREE.MeshBasicMaterial({color: 0x44aa88}); 
+  const materialHoop = new THREE.MeshLambertMaterial({color: 0x44aa88}); 
   const geometryHoop2 = new THREE.TorusGeometry(100,tube*1.05,radialSegments,tubularSegments, arc/2);
   const hoop = new THREE.Mesh(geometryHoop, materialHoop);
   scene.add(hoop);
   const geometryCenter = new THREE.SphereGeometry( 2, 32, 16 );
-  const materialCenter = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+  const materialCenter = new THREE.MeshLambertMaterial( { color: 0xffff00 } );
   const center = new THREE.Mesh( geometryCenter, materialCenter );
   scene.add( center );
-  const geometryBall = new THREE.SphereGeometry( 5, 5,5 );
+  const geometryBall = new THREE.SphereGeometry( 6, 5,5 );
   const materialBall = new THREE.MeshBasicMaterial( { color: 0xff0000} );
   const ball = new THREE.Mesh( geometryBall, materialBall );
   scene.add( ball );
-  const lineMaterial = new THREE.LineBasicMaterial({color: "red", linewidth: 3});
+  const lineMaterial = new THREE.MeshLambertMaterial({color: "red"});
   const points = [];
   points.push( new THREE.Vector3( 0, 120, 0 ) );
   points.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -88,8 +93,8 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   var tubeGeometry = new THREE.TubeGeometry(
     new THREE.CatmullRomCurve3(points),
     512,
-    1,
-    8, 
+    2,
+    12, 
     false 
   );
   const line = new THREE.Line( tubeGeometry, lineMaterial );
@@ -101,7 +106,7 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let balls = [];
   let ballsCords = [];
   for (let i = 0; i < trailLen; i++) {
-    balls.push(new THREE.Mesh( new THREE.SphereGeometry( i/trailLen*5, 5,5 ), new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0+i/trailLen} )));
+    balls.push(new THREE.Mesh( new THREE.SphereGeometry( i/trailLen*6, 5,5 ), new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0+i/trailLen} )));
     ballsCords.push(0);
   }
   balls.forEach(e=>scene.add(e));
@@ -116,11 +121,11 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   let graphData = new simData(graphUpdateInterval);
   graphData = getGraphData(graphUpdateInterval, velocity, angle, omega, radius, g, k, equations, useEval, graphLen, graphData, 0, wrap);
   if (thetaDivId === "variableSim-theta"){
-  thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "inputed", [0,0]);
-  velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "inputed", [0,0]);
+  thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "test", [0,0]);
+  velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "test", [0,0]);
 } else{
-  thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "actual", [0,0]);
-  velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "actual", [0,0]);
+  thetaGraph = drawTheta(graphData, graphLen, thetaDivId, "reference", [0,0]);
+  velocityGraph = drawVelocity(graphData, graphLen, velocityDivId, "reference", [0,0]);
 }
   
   let timer = 0;

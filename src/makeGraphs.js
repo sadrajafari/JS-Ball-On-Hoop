@@ -60,10 +60,10 @@ export function drawTheta(globalData,graphLen,divID,type){
   
       svg.append("text")
       .attr("x", (height/2.5))
-      .attr("y", 20)
+      .attr("y", 2)
       .style("text-anchor", "middle")
       .style("font-size", "15px")
-      .text(`θ over Time: ${type} eqn`)
+      .text(`θ over time: ${type} eqn`)
     
       return svg;
   }
@@ -130,10 +130,10 @@ export function drawTheta(globalData,graphLen,divID,type){
   
       svg.append("text")
       .attr("x", (height/2.5))
-      .attr("y", 20)
+      .attr("y", 2)
       .style("text-anchor", "middle")
       .style("font-size", "15px")
-      .text(`v over Time: ${type} eqn`)
+      .text(`v over time: ${type} eqn`)
 
       return svg;
   }
