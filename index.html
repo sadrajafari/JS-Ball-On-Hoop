@@ -11,23 +11,30 @@
 
 <body>
     <h1>Bead on Hoop</h1>
+    <hr class="solid">
     <div class = "canvas-form">
             <div class = "canvas-container">
                 <p>Reference Equations:</p>
         <canvas class = "canvas2" id="c2" width = "400" height="400"></canvas>
+        <hr class="solid">
                <p>Test Equations:</p> 
         <canvas class = "canvas1" id="c" width = "400" height="400"></canvas>
                 
             </div>
+            
     <form class = "variables">
         <p>Variables:</p>
         <div id ="vars"></div>
+        <div class = "time-stuff">
         <p class="time-label">Time(seconds):</p>
         <p class = "time-value" id="time">0</p>
+        </div>
+        <div class="equations-input">
         <p id = "equations-label">Leave Empty for default equations, (use o for ω, use t for θ):</p>
         <p id = "thetadot" >θ&#x307 = <span id="math-field"></span></p>
         <p id ="velocitydot">v&#x307 = <span id="math-field2"></span></p>
         <p id = "error-output">[BAD OR NO EQUATION INPUTED]</p>
+        </div>
     </form>
         
         <div class="graphs">
@@ -48,6 +55,7 @@
     <script src="./libraries/mathquill-0.10.1/mathquill.js"></script>
     <script src="./src/bundle2.js"></script>
     <script src="./src/makeTable.js"></script>
+    <hr class="solid">
     <button type="button" 
     id = "generate" 
     class="btn btn-outline-light btn-lg"

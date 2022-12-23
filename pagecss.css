@@ -1,6 +1,14 @@
 .canvas-form{
     display: flex;
     justify-content: left;
+    border: 1px solid black;
+}
+.canvas-container{
+    border: 1px solid black;
+}
+.time-stuff{
+    border: 1px solid black;
+
 }
 .time-label{
     text-align: center;
@@ -13,16 +21,24 @@
     justify-content: space-between;
     
 }
-
+.variables{
+    border: 1px solid black;
+}
 .actual{
     display: flex;
     justify-content: left;
+    border: 1px solid black;
 }
 .inputed{
     display: flex;
     justify-content: left;
+    border: 1px solid black;
 }
 .varCol{
     display: flex;
     justify-content: right;
+    border: 1px solid black;
+}
+.equations-input{
+    border: 1px solid black;
 }
