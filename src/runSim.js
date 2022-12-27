@@ -130,34 +130,27 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   
   let timer = 0;
   let lastTime = 0;
-  let firstIteration = true;
+  let firstIteration = 0;
   let timerThreshold = false;
 
   renderer.render(scene, camera);
   function render(time){ // find delta t between animations and plug in as h in rk4
-
+    firstIteration++;
     if (window.play && (window.RunTest || !useEval)){
       
       //console.log(funcID);
     let dt = ((time - lastTime) * simSpeed/ 1000);
-    if (firstIteration){
+    if (firstIteration < 3){ //this exists because w/o it the second frame's dt is unusually high and causes the simulation and graph to start at a later point
       lastTime = time;
-      firstIteration = false;
       dt = 0;
     }
 
-    //hoop rotation, grab new data from rk4, adjust angle to whithin 0-6.28 rads
     
     timer += dt;
     lastTime = time;
     angle = graphData.getTheta(timer);
     velocity = graphData.getVelocity(timer);
 
-    // angle = angle%(2*Math.PI);
-    // if (angle < 0){
-    //   angle = 2*Math.PI - Math.abs(angle)
-    // }
-    
     hoop.rotation.y += omega*dt;
     if(timer < graphLen){
       let ballAngle = graphData.getTheta(timer);
