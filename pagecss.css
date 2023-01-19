@@ -1,22 +1,23 @@
 .canvas-form{
     display: flex;
     justify-content: left;
-    border: 1px solid black;
-    margin-top: -1px;
-    margin-left: -1px;
     
 }
 .canvas-container{
     border: 1px solid black;
     margin-top: -1px;
     margin-left: -1px;
+    margin-bottom: -2px;
 }
-.time-stuff{
+
+.variables{
     border: 1px solid black;
     margin-top: -1px;
     margin-left: -1px;
     margin-right: -1px;
+    margin-bottom: -1px;
 }
+
 .time-label{
     text-align: center;
 }
@@ -28,35 +29,22 @@
     justify-content: space-between;
     
 }
-.variables{
-    border: 1px solid black;
-    margin-top: -1px;
-    margin-left: -1px;
-}
+
 .actual{
     display: flex;
     justify-content: left;
-    border: 1px solid black;
-    margin-top: -1px;
-    margin-left: -1px;
+
 }
 .inputed{
     display: flex;
     justify-content: left;
-    border: 1px solid black;
-    margin-top: -1px;
-    margin-left: -1px;
+
 }
-.varCol{
-    display: flex;
-    justify-content: right;
-    border: 1px solid black;
-    margin-top: -1px;
-    margin-left: -1px;
-}
-.equations-input{
+
+.graphs{
     border: 1px solid black;
     margin-top: -1px;
     margin-left: -1px;
     margin-right: -1px;
+    margin-bottom: -1px;
 }

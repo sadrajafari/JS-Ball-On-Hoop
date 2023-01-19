@@ -4,8 +4,8 @@ import * as d3 from "https://esm.run/d3";
 export function drawTheta(globalData,graphLen,divID,type){
   
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
-      width = 300 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
+      width = 400 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
   
   // append the svg object to the body of the page
   const svg = d3.select(`#${divID}`)
@@ -72,8 +72,8 @@ export function drawTheta(globalData,graphLen,divID,type){
   export function drawVelocity(globalData,graphLen,divID,type){
     
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
-      width = 300 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
+      width = 400 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
   
   // append the svg object to the body of the page
   const svg = d3.select(`#${divID}`)
