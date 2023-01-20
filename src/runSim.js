@@ -9,7 +9,7 @@ export let nextFrameStatic = null;
 export let nextFrameVariable = null;
 
 
-
+// console.log(d3)
 export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
     //TODO:
     //Antiaialasing or make the hoop crisp, add diffuse lighting so hoop and center rod look cylyndrical, make graph names be above graphs
@@ -79,26 +79,26 @@ export function draw(equations, useEval, thetaDivId, velocityDivId, ) {
   scene.add(hoop);
   const geometryCenter = new THREE.SphereGeometry( 2, 32, 16 );
   const materialCenter = new THREE.MeshLambertMaterial( { color: 0xffff00 } );
-  const center = new THREE.Mesh( geometryCenter, materialCenter );
-  scene.add( center );
+  // const center = new THREE.Mesh( geometryCenter, materialCenter );
+  // scene.add( center );
   const geometryBall = new THREE.SphereGeometry( 6, 5,5 );
   const materialBall = new THREE.MeshBasicMaterial( { color: 0xff0000} );
   const ball = new THREE.Mesh( geometryBall, materialBall );
-  scene.add( ball );
-  const lineMaterial = new THREE.MeshLambertMaterial({color: "red"});
-  const points = [];
-  points.push( new THREE.Vector3( 0, 120, 0 ) );
-  points.push( new THREE.Vector3( 0, 0, 0 ) );
-  points.push( new THREE.Vector3( 0, -120, 0 ) );
-  var tubeGeometry = new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3(points),
-    512,
-    2,
-    12, 
-    false 
-  );
-  const line = new THREE.Line( tubeGeometry, lineMaterial );
-  scene.add(line);
+  // scene.add( ball );
+  // const lineMaterial = new THREE.MeshLambertMaterial({color: "red"});
+  // const points = [];
+  // points.push( new THREE.Vector3( 0, 120, 0 ) );
+  // points.push( new THREE.Vector3( 0, 0, 0 ) );
+  // points.push( new THREE.Vector3( 0, -120, 0 ) );
+  // var tubeGeometry = new THREE.TubeGeometry(
+  //   new THREE.CatmullRomCurve3(points),
+  //   512,
+  //   2,
+  //   12, 
+  //   false 
+  // );
+  // const line = new THREE.Line( tubeGeometry, lineMaterial );
+  // scene.add(line);
 
 
 
@@ -233,7 +233,7 @@ function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityG
   if (!(timer == null) && !(angle == null)) {
     const x = d3.scaleLinear()
       .domain([0,graphLen])
-      .range([ 0, 310]);
+      .range([ 0, 210]);
 
       const minYT = d3.min(graphData.data, (d) => d.theta)
       const maxYT = d3.max(graphData.data, (d) => d.theta)
@@ -241,11 +241,11 @@ function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityG
       const maxYV = d3.max(graphData.data, (d) => d.velocity)
       const y = d3.scaleLinear()
       .domain([maxYT, minYT])
-      .range([ 0, 360 ]);
+      .range([ 0, 260 ]);
 
       const yV = d3.scaleLinear()
       .domain([maxYV, minYV])
-      .range([ 0, 360 ]);
+      .range([ 0, 260 ]);
 
     thetaGraph.selectAll("circle").remove();
     thetaGraph.selectAll("dot")
@@ -269,4 +269,41 @@ function updateBallGraph(timer, angle, velocity, graphLen, thetaGraph, velocityG
     }
 }
 
+// function updateGraphData(graphLen, thetaGraph, velocityGraph, graphData){
+//       const margin = {top: 10, right: 30, bottom: 30, left: 60},
+//       width = 300 - margin.left - margin.right,
+//       height = 300 - margin.top - margin.bottom;
 
+
+//       const minY = d3.min(graphData, (d) => d[2])
+//       const maxY = d3.max(graphData, (d) => d[2])
+//       // Add X axis --> it is a date format
+//       const x = d3.scaleLinear()
+//         .domain([0,graphLen])
+//         .range([ 0, width]);
+//         thetaGraph.selectAll("g").remove();
+//         thetaGraph.append("g")
+//         .attr("transform", `translate(0, ${height})`)
+//         .call(d3.axisBottom(x));
+  
+//       // Add Y axis
+//       const y = d3.scaleLinear()
+//         .domain([minY, maxY])
+//         .range([ height, 0 ]);
+//         thetaGraph.append("g")
+//         .call(d3.axisLeft(y));
+  
+      
+  
+//       // Add the line
+//       thetaGraph
+//         .append("path")
+//         .datum(graphData)
+//         .attr("fill", "none")
+//         .attr("stroke", "steelblue")
+//         .attr("stroke-width", 1.5)
+//         .attr("d", d3.line()
+//           .x(function(d) { return x(d[0]) })
+//           .y(function(d) { return y(d[2]) })
+//           )
+// }

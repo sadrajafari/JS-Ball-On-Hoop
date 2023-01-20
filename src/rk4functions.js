@@ -64,14 +64,14 @@ export function updateVals(dt, velocity, angle, omega, radius, g, k, equations, 
       dydt[0]= thetadot({v:y[1],t:y[0]});
       } catch (err){
         //console.log(err);
-        document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED]";
+        // document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED]";
       }
     
     try{
       const velocitydot = globalThis.window.evaluatex(equations.velocitydot, {k:k,r:r,g:g,o:omega}, {latex:true});
       dydt[1]= velocitydot({v:y[1],t:y[0]});
     } catch(err){
-      document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED]";
+      // document.getElementById("error-output").innerHTML="[BAD OR NO EQUATION INPUTED]";
     }
     
   

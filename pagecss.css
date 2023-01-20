@@ -1,23 +1,23 @@
 .canvas-form{
     display: flex;
     justify-content: left;
+    border: 1px solid black;
+    margin-top: -1px;
+    margin-left: -1px;
     
 }
+
 .canvas-container{
     border: 1px solid black;
     margin-top: -1px;
     margin-left: -1px;
-    margin-bottom: -2px;
 }
-
-.variables{
+.time-stuff{
     border: 1px solid black;
     margin-top: -1px;
     margin-left: -1px;
     margin-right: -1px;
-    margin-bottom: -1px;
 }
-
 .time-label{
     text-align: center;
 }
@@ -29,22 +29,295 @@
     justify-content: space-between;
     
 }
-
+.variables{
+    border: 1px solid black;
+    margin-top: -1px;
+    margin-left: -1px;
+}
 .actual{
     display: flex;
     justify-content: left;
-
+    border: 1px solid black;
+    margin-top: -1px;
+    margin-left: -1px;
 }
 .inputed{
     display: flex;
     justify-content: left;
+    border: 1px solid black;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+.varCol{
+    display: flex;
+    justify-content: right;
+    border: 1px solid black;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+.equations-input{
+    border: 1px solid black;
+    margin-top: -1px;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+body{
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+}
+.main{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.head{
+    width: 100%;
+    height: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(157, 249, 220);
+}
+.headTextDiv{
+    width: 100%;
+    height: 9vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+.headText{
+    font-style: italic;
+    color: darkgrey;
+    font-size: 2.5rem;
+}
+.lineDiv{
+    margin-top: -5px;
+    height: 1vh;
+    width: 100%;
+}
+.detail{
+    height: 90vh;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-evenly;
+}
+.draw{
+    border-right: .1rem solid black;
+    width: 33.3vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.refText{
+    display: flex;
+    top: 0;
+    justify-content: center;
+    color: rgb(98, 96, 96);
+    width: 100%;
+    height: 1rem;
+    /* margin-top: 1.5rem; */
+}
+.refDraw{
+    height: 25rem;
+    width: 100%;
+    border-bottom: .1rem solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* margin-top: 10rem; */
+}
+.testDraw{
+    height: 1rem;
+    width: 100%;
+    /* border-bottom: .1rem solid black; */
+    display: flex;
+    flex-direction: column;
+}
+.show{
+    height: 90%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-top: 1rem; */
+}
+.testDraw{
+    height: 25rem;
+    width: 100%;
+    /* border-bottom: .1rem solid black; */
+}
+.info{
+    border-right: .1rem solid black;
+    width: 33.3vw;
+    height: 90vh;
+}
+.varText{
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(98, 96, 96);
+    
+}
+.dataForm{
+    width: 100%;
+    height: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.getInfo{
+    width: 80%;
+    margin: .2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.checkboxItem{
+    width: 80%;
+    margin: .2rem;
+    display: flex;
+    justify-content: flex-start;
+}
+.setPosition{
+    width: 8.5rem;
+}
+.timeShow{
+    display: flex;
+    justify-content: center;
+    border-top: .1rem solid black;
+    border-bottom: .1rem solid black;
+    height: 1rem;
+    align-items: center;
+    
+}
+.test{
+    width: 100%;
+    height: 11.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    color: rgb(98, 96, 96);
+}
+.textSet{
+    font-size: 1.5rem;
+    
+}
+.testData{
+    height: 4rem;
+    width: 20rem;
+    margin-left: .3rem;
+    font-size: 3rem;
+}
+.label{
+    width: 3.5rem;
+}
+.graph{
+    width: 33.3vw;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    
+}
+.graphType{
+    width: 40%;
+    height: 10rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    /* border-left: .1rem solid black; */
+    color: rgb(98, 96, 96);
+}
+.showResult{
+    width: 100%;
+    height: 80rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    /* margin-top: 10rem; */
+}
+.setGraph{
+    height: 10rem !important;
+    width: 10%;
+    background-color: blue;
+}
+.boxSize{
+    width: 20rem;
+    height: auto;
+    margin-left: 1px;
+    text-justify: center;
+    
+}
+.thetaAndv{
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-right: 10px; */
+}
+.setEquation{
+    height: 2.5rem;
+}
+.EquationBox{
+    height: 7.5rem;
+}
+.playPause{
+    display: flex;
+    position: relative;
+    bottom: 1.5rem;
+    left: 1rem;
+    flex-direction: row;
+    width: 8rem;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 3rem;
+    margin-bottom: -2rem;
 
 }
 
-.graphs{
-    border: 1px solid black;
-    margin-top: -1px;
+
+.play{
+    height: 3rem;
+    width: 3rem;
+    background-color: rgb(200, 177, 223);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    color: white;
+    user-select: none;
+    /* font-size: 1rem; */
     
-    margin-right: -1px;
-    margin-bottom: -1px;
+}
+.play:hover{
+    background-color: rgb(128, 0, 255);
+}
+.pause{
+    height: 3rem;
+    width: 3rem;
+    background-color: rgb(200, 177, 223);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    color: white;
+    user-select: none;
+    /* font-size: 1rem; */
+}
+.pause:hover{
+    background-color: rgb(128, 0, 255);
+
 }
